@@ -49,6 +49,9 @@ This software should also work under Microsoft Windows: if you tried it successf
 <b>*** HOW?</b>
 <br/>
 
+You will need the calibration files produced with my calibration utility : https://github.com/AbsurdePhoton/calib-mpo
+</br>
+
 This part will be soon available.
 <br/>
 <br/>
