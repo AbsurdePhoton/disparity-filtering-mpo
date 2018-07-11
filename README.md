@@ -49,7 +49,7 @@ This software should also work under Microsoft Windows: if you tried it successf
 <b>*** HOW?</b>
 <br/>
 
-This part will be soo, available.
+This part will be soon available.
 <br/>
 <br/>
 
