@@ -33,10 +33,10 @@ This software should also work under Microsoft Windows: if you tried it successf
 
 ## HOW?
 
-You will need the calibration files produced with my calibration utility : https://github.com/AbsurdePhoton/calib-mpo
+You will need the calibration files for your camera / lens, produced by my calibration utility : https://github.com/AbsurdePhoton/calib-mpo
 </br>
 
-This part will be soon available.
+The rest of the explanation will come soon, promise!
 <br/>
 <br/>
 
