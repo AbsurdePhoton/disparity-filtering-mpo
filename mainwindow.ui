@@ -1,0 +1,1502 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1366</width>
+    <height>768</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1366</width>
+    <height>768</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Disparity or depth map from 3D stereo pairs with openCV and QT</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <widget class="QPushButton" name="Left">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>10</y>
+      <width>71</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Load the left image to process</string>
+    </property>
+    <property name="text">
+     <string> Left</string>
+    </property>
+    <property name="icon">
+     <iconset resource="resources.qrc">
+      <normaloff>:/icons/image-left.png</normaloff>:/icons/image-left.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>24</width>
+      <height>24</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>130</y>
+      <width>451</width>
+      <height>530</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_buttons">
+     <property name="horizontalSpacing">
+      <number>6</number>
+     </property>
+     <item row="13" column="0">
+      <widget class="QLabel" name="label_speckle_range">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Maximum disparity variation within each connected component. If you do speckle filtering, set the parameter to a positive value, it will be implicitly multiplied by 16. Normally, 1 or 2 is good enough.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>Speckle range</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="2">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>144</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="label_num_of_disparity">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Maximum disparity minus minimum disparity. The value is always greater than zero. In the current implementation, this parameter must be divisible by 16.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>Number of disparity</string>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="2">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>15</string>
+       </property>
+      </widget>
+     </item>
+     <item row="18" column="2">
+      <widget class="QLabel" name="label_13">
+       <property name="text">
+        <string>8000</string>
+       </property>
+      </widget>
+     </item>
+     <item row="17" column="1">
+      <widget class="QComboBox" name="mode">
+       <property name="toolTip">
+        <string>Set it to StereoSGBM::MODE_HH to run the full-scale two-pass dynamic programming algorithm. It will consume O(W*H*numDisparities) bytes, which is large for 640x480 stereo and huge for HD-size pictures.</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QSlider" name="horizontalSlider_SAD_window_size">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="toolTip">
+        <string>Matched block size. It must be an odd number &gt;=1 . Normally, it should be somewhere in the 3..11 range.</string>
+       </property>
+       <property name="minimum">
+        <number>5</number>
+       </property>
+       <property name="maximum">
+        <number>255</number>
+       </property>
+       <property name="singleStep">
+        <number>2</number>
+       </property>
+       <property name="value">
+        <number>41</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>41</string>
+       </property>
+      </widget>
+     </item>
+     <item row="12" column="2">
+      <widget class="QLabel" name="label_8">
+       <property name="text">
+        <string>0</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="2">
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>10</string>
+       </property>
+      </widget>
+     </item>
+     <item row="13" column="1">
+      <widget class="QSlider" name="horizontalSlider_speckle_range">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="toolTip">
+        <string>Maximum disparity variation within each connected component. If you do speckle filtering, set the parameter to a positive value, it will be implicitly multiplied by 16. Normally, 1 or 2 is good enough.</string>
+       </property>
+       <property name="minimum">
+        <number>0</number>
+       </property>
+       <property name="maximum">
+        <number>16</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="17" column="0">
+      <widget class="QLabel" name="label_mode">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Maximum allowed difference (in integer pixel units) in the left-right disparity check. Set it to a non-positive value to disable the check.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>Mode</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QSlider" name="horizontalSlider_num_of_disparity">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="toolTip">
+        <string>Maximum disparity minus minimum disparity. The value is always greater than zero. In the current implementation, this parameter must be divisible by 16.</string>
+       </property>
+       <property name="minimum">
+        <number>16</number>
+       </property>
+       <property name="maximum">
+        <number>256</number>
+       </property>
+       <property name="singleStep">
+        <number>16</number>
+       </property>
+       <property name="pageStep">
+        <number>16</number>
+       </property>
+       <property name="value">
+        <number>144</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="16" column="2">
+      <widget class="QLabel" name="label_12">
+       <property name="text">
+        <string>600</string>
+       </property>
+      </widget>
+     </item>
+     <item row="14" column="2">
+      <widget class="QLabel" name="label_10">
+       <property name="text">
+        <string>-1</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QSlider" name="horizontalSlider_min_disparity">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="toolTip">
+        <string>Minimum possible disparity value. Normally, it is zero but sometimes rectification algorithms can shift images, so this parameter needs to be adjusted accordingly.</string>
+       </property>
+       <property name="minimum">
+        <number>-300</number>
+       </property>
+       <property name="maximum">
+        <number>100</number>
+       </property>
+       <property name="singleStep">
+        <number>1</number>
+       </property>
+       <property name="pageStep">
+        <number>10</number>
+       </property>
+       <property name="value">
+        <number>-64</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="0">
+      <widget class="QLabel" name="label_pre_filter_cap">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Truncation value for the prefiltered image pixels. The algorithm first computes x-derivative at each pixel and clips its value by &lt;span style=&quot; font-family:'Courier New,courier';&quot;&gt;[-preFilterCap, preFilterCap]&lt;/span&gt; interval. The result values are passed to the Birchfield-Tomasi pixel cost function.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>Pre-filter cap</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_SAD_window_size">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Matched block size. It must be an odd number &lt;span style=&quot; font-family:'Courier New,courier';&quot;&gt;&amp;gt;=1&lt;/span&gt; . Normally, it should be somewhere in the &lt;span style=&quot; font-family:'Courier New,courier';&quot;&gt;3..11&lt;/span&gt; range.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>SAD window size</string>
+       </property>
+      </widget>
+     </item>
+     <item row="18" column="1">
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_lambda">
+       <property name="toolTip">
+        <string>Lambda is a parameter defining the amount of regularization during filtering. Larger values force filtered disparity map edges to adhere more to source image edges. Typical value is 8000.</string>
+       </property>
+       <property name="decimals">
+        <number>0</number>
+       </property>
+       <property name="minimum">
+        <double>0.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>20000.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>100.000000000000000</double>
+       </property>
+       <property name="value">
+        <double>8000.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="label_pre_filter_size">
+       <property name="text">
+        <string>Pre-filter size</string>
+       </property>
+      </widget>
+     </item>
+     <item row="13" column="2">
+      <widget class="QLabel" name="label_9">
+       <property name="text">
+        <string>0</string>
+       </property>
+      </widget>
+     </item>
+     <item row="16" column="0">
+      <widget class="QLabel" name="label_P2">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Maximum allowed difference (in integer pixel units) in the left-right disparity check. Set it to a non-positive value to disable the check.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>P2</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="0">
+      <widget class="QLabel" name="label_texture_threshold">
+       <property name="text">
+        <string>Texture threshold</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="2">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>31</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QSlider" name="horizontalSlider_pre_filter_cap">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="toolTip">
+        <string>Truncation value for the prefiltered image pixels. The algorithm first computes x-derivative at each pixel and clips its value by [-preFilterCap, preFilterCap] interval. The result values are passed to the Birchfield-Tomasi pixel cost function.</string>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>63</number>
+       </property>
+       <property name="value">
+        <number>31</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="2">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>-64</string>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="1">
+      <widget class="QSlider" name="horizontalSlider_uniqueness_ratio">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="toolTip">
+        <string>Margin in percentage by which the best (minimum) computed cost function value should &quot;win&quot; the second best value to consider the found match correct. Normally, a value within the 5-15 range is good enough.</string>
+       </property>
+       <property name="maximum">
+        <number>255</number>
+       </property>
+       <property name="value">
+        <number>15</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="15" column="0">
+      <widget class="QLabel" name="label_P1">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Maximum allowed difference (in integer pixel units) in the left-right disparity check. Set it to a non-positive value to disable the check.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>P1</string>
+       </property>
+      </widget>
+     </item>
+     <item row="19" column="2">
+      <widget class="QLabel" name="label_14">
+       <property name="text">
+        <string>1.5</string>
+       </property>
+      </widget>
+     </item>
+     <item row="19" column="1">
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_sigma">
+       <property name="toolTip">
+        <string>SigmaColor is a parameter defining how sensitive the filtering process is to source image edges. Large values can lead to disparity leakage through low-contrast edges. Small values can make the filter too sensitive to noise and textures in the source image. Typical values range from 0.8 to 2.0.</string>
+       </property>
+       <property name="minimum">
+        <double>0.100000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>3.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.100000000000000</double>
+       </property>
+       <property name="value">
+        <double>1.500000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="14" column="1">
+      <widget class="QSlider" name="horizontalSlider_disp_12_max_diff">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="toolTip">
+        <string>Maximum allowed difference (in integer pixel units) in the left-right disparity check. Set it to a non-positive value to disable the check.</string>
+       </property>
+       <property name="minimum">
+        <number>-1</number>
+       </property>
+       <property name="maximum">
+        <number>100</number>
+       </property>
+       <property name="value">
+        <number>-1</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="18" column="0">
+      <widget class="QLabel" name="label_lambda">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Maximum allowed difference (in integer pixel units) in the left-right disparity check. Set it to a non-positive value to disable the check.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>Filter Lambda</string>
+       </property>
+      </widget>
+     </item>
+     <item row="12" column="1">
+      <widget class="QSlider" name="horizontalSlider_speckle_window_size">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="toolTip">
+        <string>Maximum size of smooth disparity regions to consider their noise speckles and invalidate. Set it to 0 to disable speckle filtering. Otherwise, set it somewhere in the 50-200 range.</string>
+       </property>
+       <property name="maximum">
+        <number>250</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="15" column="2">
+      <widget class="QLabel" name="label_11">
+       <property name="text">
+        <string>500</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="1">
+      <widget class="QSlider" name="horizontalSlider_texture_threshold">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="toolTip">
+        <string>Calculate the disparity only at locations, where the texture is larger than this threshold</string>
+       </property>
+       <property name="maximum">
+        <number>255</number>
+       </property>
+       <property name="value">
+        <number>10</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_min_disparity">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Minimum possible disparity value. Normally, it is zero but sometimes rectification algorithms can shift images, so this parameter needs to be adjusted accordingly.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>Minimum disparity</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="2">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>41</string>
+       </property>
+      </widget>
+     </item>
+     <item row="12" column="0">
+      <widget class="QLabel" name="label_speckle_window_size">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Maximum size of smooth disparity regions to consider their noise speckles and invalidate. Set it to 0 to disable speckle filtering. Otherwise, set it somewhere in the 50-200 range.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>Speckle window size</string>
+       </property>
+      </widget>
+     </item>
+     <item row="19" column="0">
+      <widget class="QLabel" name="label_sigma">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Maximum allowed difference (in integer pixel units) in the left-right disparity check. Set it to a non-positive value to disable the check.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>Filter Sigma</string>
+       </property>
+      </widget>
+     </item>
+     <item row="16" column="1">
+      <widget class="QSlider" name="horizontalSlider_P2">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="toolTip">
+        <string>parameter controlling the disparity smoothness. The larger the values are, the smoother the disparity is. P1 is the penalty on the disparity change by plus or minus 1 between neighbor pixels. P2 is the penalty on the disparity change by more than 1 between neighbor pixels. The algorithm requires P2 &gt; P1 . See stereo_match.cpp sample where some reasonably good P1 and P2 values are shown (like 8*number_of_image_channels*SADWindowSize*SADWindowSize and 32*number_of_image_channels*SADWindowSize*SADWindowSize , respectively).</string>
+       </property>
+       <property name="minimum">
+        <number>5</number>
+       </property>
+       <property name="maximum">
+        <number>153600</number>
+       </property>
+       <property name="singleStep">
+        <number>2</number>
+       </property>
+       <property name="value">
+        <number>600</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="15" column="1">
+      <widget class="QSlider" name="horizontalSlider_P1">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="toolTip">
+        <string>parameter controlling the disparity smoothness. The larger the values are, the smoother the disparity is. P1 is the penalty on the disparity change by plus or minus 1 between neighbor pixels. P2 is the penalty on the disparity change by more than 1 between neighbor pixels. The algorithm requires P2 &gt; P1 . See stereo_match.cpp sample where some reasonably good P1 and P2 values are shown (like 8*number_of_image_channels*SADWindowSize*SADWindowSize and 32*number_of_image_channels*SADWindowSize*SADWindowSize , respectively).</string>
+       </property>
+       <property name="minimum">
+        <number>5</number>
+       </property>
+       <property name="maximum">
+        <number>38400</number>
+       </property>
+       <property name="singleStep">
+        <number>2</number>
+       </property>
+       <property name="value">
+        <number>500</number>
+       </property>
+       <property name="sliderPosition">
+        <number>500</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="14" column="0">
+      <widget class="QLabel" name="label_disp_12_max_diff">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Maximum allowed difference (in integer pixel units) in the left-right disparity check. Set it to a non-positive value to disable the check.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>Disp. 12 max. diff.</string>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="0">
+      <widget class="QLabel" name="label_uniqueness_ratio">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Margin in percentage by which the best (minimum) computed cost function value should “win” the second best value to consider the found match correct. Normally, a value within the 5-15 range is good enough.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>Uniqueness ratio</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QSlider" name="horizontalSlider_pre_filter_size">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="toolTip">
+        <string>Window size of the prefilter</string>
+       </property>
+       <property name="minimum">
+        <number>5</number>
+       </property>
+       <property name="maximum">
+        <number>255</number>
+       </property>
+       <property name="singleStep">
+        <number>2</number>
+       </property>
+       <property name="value">
+        <number>41</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QPushButton" name="Right">
+    <property name="geometry">
+     <rect>
+      <x>1090</x>
+      <y>10</y>
+      <width>81</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Load the right image to process</string>
+    </property>
+    <property name="text">
+     <string> Right</string>
+    </property>
+    <property name="icon">
+     <iconset resource="resources.qrc">
+      <normaloff>:/icons/image-right.png</normaloff>:/icons/image-right.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>24</width>
+      <height>24</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_image_left">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>10</y>
+      <width>231</width>
+      <height>171</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>400</width>
+      <height>400</height>
+     </size>
+    </property>
+    <property name="toolTip">
+     <string>Left image of the stereo pair to process</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Sunken</enum>
+    </property>
+    <property name="lineWidth">
+     <number>2</number>
+    </property>
+    <property name="text">
+     <string>Left image</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_image_right">
+    <property name="geometry">
+     <rect>
+      <x>860</x>
+      <y>10</y>
+      <width>231</width>
+      <height>171</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>400</width>
+      <height>400</height>
+     </size>
+    </property>
+    <property name="toolTip">
+     <string>Right image of the stereo pair to process</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Sunken</enum>
+    </property>
+    <property name="lineWidth">
+     <number>2</number>
+    </property>
+    <property name="text">
+     <string>Right image</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radioButton_BM">
+    <property name="geometry">
+     <rect>
+      <x>89</x>
+      <y>674</y>
+      <width>61</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Stereo correspondence using the block matching algorithm, introduced and contributed to OpenCV by K. Konolige</string>
+    </property>
+    <property name="text">
+     <string>B&amp;M</string>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QRadioButton" name="radioButton_SGBM">
+    <property name="geometry">
+     <rect>
+      <x>169</x>
+      <y>674</y>
+      <width>71</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>openCV stereo method StereoSGBM (depthmap). Implements the modified H. Hirschmuller algorithm</string>
+    </property>
+    <property name="text">
+     <string>S&amp;GBM</string>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="Save_depthmap">
+    <property name="geometry">
+     <rect>
+      <x>1210</x>
+      <y>630</y>
+      <width>121</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Save the depthmap to a PNG image file</string>
+    </property>
+    <property name="text">
+     <string> Depthmap</string>
+    </property>
+    <property name="icon">
+     <iconset resource="resources.qrc">
+      <normaloff>:/icons/save.png</normaloff>:/icons/save.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>24</width>
+      <height>24</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_confidence">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>710</y>
+      <width>171</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Filter or not the resulting disparity or depth map</string>
+    </property>
+    <property name="text">
+     <string>Condidence filtering</string>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="MPO">
+    <property name="geometry">
+     <rect>
+      <x>770</x>
+      <y>30</y>
+      <width>81</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Load a stereo pair in MPO format</string>
+    </property>
+    <property name="text">
+     <string> MPO</string>
+    </property>
+    <property name="icon">
+     <iconset resource="resources.qrc">
+      <normaloff>:/icons/image-mpo.png</normaloff>:/icons/image-mpo.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>24</width>
+      <height>24</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Negative">
+    <property name="geometry">
+     <rect>
+      <x>1210</x>
+      <y>520</y>
+      <width>111</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Negative of the depthmap</string>
+    </property>
+    <property name="text">
+     <string> Negative</string>
+    </property>
+    <property name="icon">
+     <iconset resource="resources.qrc">
+      <normaloff>:/icons/negative.png</normaloff>:/icons/negative.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>24</width>
+      <height>24</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Normalize">
+    <property name="geometry">
+     <rect>
+      <x>1210</x>
+      <y>470</y>
+      <width>111</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Maximize the gray palette</string>
+    </property>
+    <property name="text">
+     <string> Normalize</string>
+    </property>
+    <property name="icon">
+     <iconset resource="resources.qrc">
+      <normaloff>:/icons/normalize.png</normaloff>:/icons/normalize.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>24</width>
+      <height>24</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QScrollArea" name="scrollArea">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>190</y>
+      <width>801</width>
+      <height>541</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="lineWidth">
+     <number>2</number>
+    </property>
+    <property name="verticalScrollBarPolicy">
+     <enum>Qt::ScrollBarAlwaysOn</enum>
+    </property>
+    <property name="horizontalScrollBarPolicy">
+     <enum>Qt::ScrollBarAlwaysOn</enum>
+    </property>
+    <property name="widgetResizable">
+     <bool>false</bool>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <widget class="QWidget" name="scrollAreaWidgetContents">
+     <property name="geometry">
+      <rect>
+       <x>277</x>
+       <y>167</y>
+       <width>227</width>
+       <height>187</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <widget class="QLabel" name="label_depth_map">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>200</width>
+        <height>40</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>Depthmap not yet computed</string>
+      </property>
+      <property name="textFormat">
+       <enum>Qt::AutoText</enum>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="Compute">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>676</y>
+      <width>121</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Computes the disparity or depth map</string>
+    </property>
+    <property name="text">
+     <string> COMPUTE</string>
+    </property>
+    <property name="icon">
+     <iconset resource="resources.qrc">
+      <normaloff>:/icons/compute.png</normaloff>:/icons/compute.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>32</width>
+      <height>32</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Rotate">
+    <property name="geometry">
+     <rect>
+      <x>770</x>
+      <y>110</y>
+      <width>81</width>
+      <height>35</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Rotate the stereo pair 90° clockwise</string>
+    </property>
+    <property name="text">
+     <string> Rotate</string>
+    </property>
+    <property name="icon">
+     <iconset resource="resources.qrc">
+      <normaloff>:/icons/rotate.png</normaloff>:/icons/rotate.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>24</width>
+      <height>24</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Swap">
+    <property name="geometry">
+     <rect>
+      <x>770</x>
+      <y>147</y>
+      <width>81</width>
+      <height>35</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Swaps left and right images</string>
+    </property>
+    <property name="text">
+     <string> Swap</string>
+    </property>
+    <property name="icon">
+     <iconset resource="resources.qrc">
+      <normaloff>:/icons/swap.png</normaloff>:/icons/swap.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>24</width>
+      <height>24</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_15">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>10</y>
+      <width>261</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Sunken</enum>
+    </property>
+    <property name="lineWidth">
+     <number>3</number>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Disparity or depth map&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;from 3D stereo pairs&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;by &lt;span style=&quot; color:#d89d1a;&quot;&gt;AbsurdePhoton&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;a href=&quot;https::/www.absurdephoton.fr&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;www.absurdephoton.fr&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_fit">
+    <property name="geometry">
+     <rect>
+      <x>1220</x>
+      <y>210</y>
+      <width>92</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Ticked : the depthmap fits the display area, else it is displayed at 100% size</string>
+    </property>
+    <property name="text">
+     <string>Fit</string>
+    </property>
+    <property name="icon">
+     <iconset resource="resources.qrc">
+      <normaloff>:/icons/zoom.png</normaloff>:/icons/zoom.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>24</width>
+      <height>24</height>
+     </size>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QFrame" name="frame">
+    <property name="geometry">
+     <rect>
+      <x>1190</x>
+      <y>24</y>
+      <width>171</width>
+      <height>151</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Sunken</enum>
+    </property>
+    <property name="lineWidth">
+     <number>2</number>
+    </property>
+    <widget class="QPushButton" name="Save_Images">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>100</y>
+       <width>151</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Save the stereo pair in PNG format - only the base name is used, to which will be added the left and right information</string>
+     </property>
+     <property name="text">
+      <string>Save images</string>
+     </property>
+     <property name="icon">
+      <iconset resource="resources.qrc">
+       <normaloff>:/icons/save.png</normaloff>:/icons/save.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="Camera">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>6</y>
+       <width>151</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Load the XML file containing the parameters of the camera lens used to shoot the stereo pair</string>
+     </property>
+     <property name="text">
+      <string> Parameters</string>
+     </property>
+     <property name="icon">
+      <iconset resource="resources.qrc">
+       <normaloff>:/icons/camera.png</normaloff>:/icons/camera.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>32</width>
+       <height>32</height>
+      </size>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="Rectify">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>151</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Rectify the stereo pair using the camera parameters</string>
+     </property>
+     <property name="text">
+      <string>Rectify images</string>
+     </property>
+     <property name="icon">
+      <iconset resource="resources.qrc">
+       <normaloff>:/icons/rectify.png</normaloff>:/icons/rectify.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QLabel" name="label_16">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>40</y>
+      <width>71</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>AbsurdePhoton - www.absurdephoton.fr</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="resources.qrc">:/icons/absurdephoton.png</pixmap>
+    </property>
+   </widget>
+   <zorder>frame</zorder>
+   <zorder>Left</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>Right</zorder>
+   <zorder>label_image_left</zorder>
+   <zorder>label_image_right</zorder>
+   <zorder>radioButton_BM</zorder>
+   <zorder>radioButton_SGBM</zorder>
+   <zorder>checkBox_confidence</zorder>
+   <zorder>MPO</zorder>
+   <zorder>Negative</zorder>
+   <zorder>Normalize</zorder>
+   <zorder>scrollArea</zorder>
+   <zorder>Compute</zorder>
+   <zorder>Rotate</zorder>
+   <zorder>Swap</zorder>
+   <zorder>Save_depthmap</zorder>
+   <zorder>label_15</zorder>
+   <zorder>checkBox_fit</zorder>
+   <zorder>label_16</zorder>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>horizontalSlider_pre_filter_size</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>label</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>264</x>
+     <y>159</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>314</x>
+     <y>165</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_pre_filter_cap</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>label_2</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>247</x>
+     <y>198</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>326</x>
+     <y>195</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_SAD_window_size</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>label_3</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>246</x>
+     <y>236</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>331</x>
+     <y>232</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_min_disparity</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>label_4</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>301</x>
+     <y>288</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>330</x>
+     <y>264</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_num_of_disparity</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>label_5</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>301</x>
+     <y>325</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>330</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_texture_threshold</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>label_6</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>301</x>
+     <y>362</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>449</x>
+     <y>362</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_uniqueness_ratio</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>label_7</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>301</x>
+     <y>399</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>449</x>
+     <y>399</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_speckle_window_size</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>label_8</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>301</x>
+     <y>436</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>449</x>
+     <y>436</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_speckle_range</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>label_9</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>301</x>
+     <y>473</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>449</x>
+     <y>473</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_disp_12_max_diff</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>label_10</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>301</x>
+     <y>510</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>449</x>
+     <y>510</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_P1</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>label_11</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>230</x>
+     <y>558</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>378</x>
+     <y>558</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_P2</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>label_12</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>230</x>
+     <y>593</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>378</x>
+     <y>593</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>doubleSpinBox_lambda</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>label_13</receiver>
+   <slot>setNum(double)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>235</x>
+     <y>567</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>386</x>
+     <y>567</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>doubleSpinBox_sigma</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>label_14</receiver>
+   <slot>setNum(double)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>235</x>
+     <y>600</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>386</x>
+     <y>600</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <buttongroups>
+  <buttongroup name="buttonGroup"/>
+ </buttongroups>
+</ui>

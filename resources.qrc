@@ -1,0 +1,19 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+  <file>./icons/rotate.png</file>
+  <file>./icons/swap.png</file>
+  <file>./icons/load.png</file>
+  <file>./icons/save.png</file>
+  <file>./icons/camera.png</file>
+  <file>./icons/negative.png</file>
+  <file>./icons/zoom.png</file>
+  <file>./icons/image-left.png</file>
+  <file>./icons/image-right.png</file>
+  <file>./icons/image-mpo.png</file>
+  <file>./icons/normalize.png</file>
+  <file>./icons/stop.png</file>
+  <file>./icons/compute.png</file>
+  <file>./icons/absurdephoton.png</file>
+  <file>./icons/rectify.png</file>
+</qresource>
+</RCC>
