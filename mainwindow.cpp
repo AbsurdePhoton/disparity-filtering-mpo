@@ -22,10 +22,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // Button icons
-    ui->Rotate->setIcon(QIcon(":./icons/rotate.png"));
-    //ui->Rotate->setIconSize(QSize(32, 32));
-
     // Init default values
     ui->horizontalSlider_pre_filter_size->setValue(41);
     ui->horizontalSlider_pre_filter_cap->setValue(31);
