@@ -414,7 +414,7 @@ void MainWindow::on_Camera_clicked () { // load stereo camera matrix
     int ref_width, ref_height, ref_size;
     double error;
     // Read calibration results from XML file
-    QString filename = QFileDialog::getOpenFileName(this, "Select XML calibration file", "/media/Photo/Travail/Calibration", "*.xml *.XML");
+    QString filename = QFileDialog::getOpenFileName(this, "Select XML calibration file", "/home", "*.xml *.XML");
     if (filename.isNull())
         return;
 
@@ -475,7 +475,7 @@ void MainWindow::on_Rectify_clicked () {
 
 void MainWindow::on_MPO_clicked () {
 
-    QString filename = QFileDialog::getOpenFileName(this, "Select MPO image file", "/media/Photo/Nus/Sabine/2018-03-09-Sabine-06-3D", "*.mpo *.MPO");
+    QString filename = QFileDialog::getOpenFileName(this, "Select MPO image file", "/home", "*.mpo *.MPO");
     if (filename.isNull())
         return;
     basename = filename.toUtf8().constData(); // basename is used after to save other files
@@ -590,7 +590,7 @@ void MainWindow::on_checkBox_fit_clicked() // Loads left image
 
 void MainWindow::on_Left_clicked() // Loads left image
 {
-    QString filename = QFileDialog::getOpenFileName(this, "Select left picture file", "/media/Photo/Nus/Sabine/2018-03-09-Sabine-06-3D");
+    QString filename = QFileDialog::getOpenFileName(this, "Select left picture file", "/home");
     if (filename.isNull() || filename.isEmpty())
         return;
     basename = filename.toUtf8().constData(); // basename is used after to save other files
@@ -611,7 +611,7 @@ void MainWindow::on_Left_clicked() // Loads left image
 
 void MainWindow::on_Right_clicked() // Loads right image
 {
-    QString filename = QFileDialog::getOpenFileName(this, "Select right picture file", "/media/Photo/Nus/Sabine/2018-03-09-Sabine-06-3D");
+    QString filename = QFileDialog::getOpenFileName(this, "Select right picture file", "/home");
 
     if (filename.isNull() || filename.isEmpty())
         return;
