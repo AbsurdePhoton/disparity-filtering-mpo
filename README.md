@@ -1,5 +1,5 @@
 # disparity-filtering-mpo
-### v1 - 2018-07-10
+### v1.1 - 2018-07-15 - Added visual measurement of disparity
 ## Disparity and depth maps with QT and OpenCV with support for classic image files and MPO stereo pairs</b>
 
 ![Screenshot](screenshot.jpg)
