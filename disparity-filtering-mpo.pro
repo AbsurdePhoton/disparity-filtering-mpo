@@ -4,7 +4,7 @@
 #
 #    by AbsurdePhoton - www.absurdephoton.fr
 #
-#                v1 - 2018/07/10
+#                v1.1 - 2018/07/15
 #
 #-------------------------------------------------
 
@@ -21,13 +21,16 @@ LIBS += -L/usr/local/lib -lopencv_core -lopencv_imgcodecs -lopencv_highgui
 SOURCES +=  main.cpp\
             mainwindow.cpp \
             mpo.cpp \
-            mat-image-tools.cpp
+            mat-image-tools.cpp \
+    disparity.cpp
 
 HEADERS  += mainwindow.h \
             mpo.h \
-            mat-image-tools.h
+            mat-image-tools.h \
+    disparity.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    disparity.ui
 
 # we add the package opencv to pkg-config
 CONFIG += link_pkgconfig

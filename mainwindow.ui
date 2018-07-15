@@ -197,7 +197,7 @@
         </sizepolicy>
        </property>
        <property name="toolTip">
-        <string>Maximum disparity minus minimum disparity. The value is always greater than zero. In the current implementation, this parameter must be divisible by 16.</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Maximum disparity minus minimum disparity. The value is always greater than zero. In the current implementation, this parameter must be divisible by 16.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;Try the ''Disparity'' button, it will visually allow you to adjust this value, and that's the best way to do it! Try the (+16) above value if the result is not perfect.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="minimum">
         <number>16</number>
@@ -242,7 +242,7 @@
         </sizepolicy>
        </property>
        <property name="toolTip">
-        <string>Minimum possible disparity value. Normally, it is zero but sometimes rectification algorithms can shift images, so this parameter needs to be adjusted accordingly.</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Minimum possible disparity value. Rectification algorithms can shift images, so this parameter needs to be adjusted accordingly.&lt;/p&gt;&lt;p&gt;Try the ''Disparity'' button, it will visually allow you to adjust this value, and that's the best way to do it!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="minimum">
         <number>-300</number>
@@ -563,7 +563,7 @@
         </sizepolicy>
        </property>
        <property name="toolTip">
-        <string>parameter controlling the disparity smoothness. The larger the values are, the smoother the disparity is. P1 is the penalty on the disparity change by plus or minus 1 between neighbor pixels. P2 is the penalty on the disparity change by more than 1 between neighbor pixels. The algorithm requires P2 &gt; P1 . See stereo_match.cpp sample where some reasonably good P1 and P2 values are shown (like 8*number_of_image_channels*SADWindowSize*SADWindowSize and 32*number_of_image_channels*SADWindowSize*SADWindowSize , respectively).</string>
+        <string>Parameter controlling the disparity smoothness. The larger the values are, the smoother the disparity is. P1 is the penalty on the disparity change by plus or minus 1 between neighbor pixels. P2 is the penalty on the disparity change by more than 1 between neighbor pixels. The algorithm requires P2 &gt; P1 . See stereo_match.cpp sample where some reasonably good P1 and P2 values are shown (like 8*number_of_image_channels*SADWindowSize*SADWindowSize and 32*number_of_image_channels*SADWindowSize*SADWindowSize , respectively).</string>
        </property>
        <property name="minimum">
         <number>5</number>
@@ -591,7 +591,7 @@
         </sizepolicy>
        </property>
        <property name="toolTip">
-        <string>parameter controlling the disparity smoothness. The larger the values are, the smoother the disparity is. P1 is the penalty on the disparity change by plus or minus 1 between neighbor pixels. P2 is the penalty on the disparity change by more than 1 between neighbor pixels. The algorithm requires P2 &gt; P1 . See stereo_match.cpp sample where some reasonably good P1 and P2 values are shown (like 8*number_of_image_channels*SADWindowSize*SADWindowSize and 32*number_of_image_channels*SADWindowSize*SADWindowSize , respectively).</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Parameter controlling the disparity smoothness. The larger the values are, the smoother the disparity is. P1 is the penalty on the disparity change by plus or minus 1 between neighbor pixels. P2 is the penalty on the disparity change by more than 1 between neighbor pixels. The algorithm requires P2 &amp;gt; P1 . See stereo_match.cpp sample where some reasonably good P1 and P2 values are shown (like 8*number_of_image_channels*SADWindowSize*SADWindowSize and 32*number_of_image_channels*SADWindowSize*SADWindowSize , respectively).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="minimum">
         <number>5</number>
@@ -801,7 +801,7 @@
    <widget class="QPushButton" name="Save_depthmap">
     <property name="geometry">
      <rect>
-      <x>1210</x>
+      <x>1240</x>
       <y>630</y>
       <width>121</width>
       <height>41</height>
@@ -872,7 +872,7 @@
    <widget class="QPushButton" name="Negative">
     <property name="geometry">
      <rect>
-      <x>1210</x>
+      <x>1240</x>
       <y>520</y>
       <width>111</width>
       <height>41</height>
@@ -898,7 +898,7 @@
    <widget class="QPushButton" name="Normalize">
     <property name="geometry">
      <rect>
-      <x>1210</x>
+      <x>1240</x>
       <y>470</y>
       <width>111</width>
       <height>41</height>
@@ -926,7 +926,7 @@
      <rect>
       <x>410</x>
       <y>190</y>
-      <width>801</width>
+      <width>831</width>
       <height>541</height>
      </rect>
     </property>
@@ -957,7 +957,7 @@
     <widget class="QWidget" name="scrollAreaWidgetContents">
      <property name="geometry">
       <rect>
-       <x>277</x>
+       <x>292</x>
        <y>167</y>
        <width>227</width>
        <height>187</height>
@@ -1058,7 +1058,7 @@
      </rect>
     </property>
     <property name="toolTip">
-     <string>Swaps left and right images</string>
+     <string>Swap left and right images</string>
     </property>
     <property name="text">
      <string> Swap</string>
@@ -1102,8 +1102,8 @@
    <widget class="QCheckBox" name="checkBox_fit">
     <property name="geometry">
      <rect>
-      <x>1220</x>
-      <y>210</y>
+      <x>1250</x>
+      <y>270</y>
       <width>92</width>
       <height>31</height>
      </rect>
@@ -1132,9 +1132,9 @@
     <property name="geometry">
      <rect>
       <x>1190</x>
-      <y>24</y>
+      <y>10</y>
       <width>171</width>
-      <height>151</height>
+      <height>171</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -1150,13 +1150,13 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>100</y>
+       <y>123</y>
        <width>151</width>
        <height>41</height>
       </rect>
      </property>
      <property name="toolTip">
-      <string>Save the stereo pair in PNG format - only the base name is used, to which will be added the left and right information</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Save the stereo pair in PNG format - only the base name is used, to which will be added the left and right information.&lt;/p&gt;&lt;p&gt;Only save the images after they are rectified.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="text">
       <string>Save images</string>
@@ -1182,7 +1182,7 @@
       </rect>
      </property>
      <property name="toolTip">
-      <string>Load the XML file containing the parameters of the camera lens used to shoot the stereo pair</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Load the XML file containing the parameters of the camera lens used to shoot the stereo pair.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="text">
       <string> Parameters</string>
@@ -1208,7 +1208,7 @@
       </rect>
      </property>
      <property name="toolTip">
-      <string>Rectify the stereo pair using the camera parameters</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Rectify the stereo pair using the camera parameters.&lt;/p&gt;&lt;p&gt;You need to load the camera parameters before using it!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="text">
       <string>Rectify images</string>
@@ -1224,6 +1224,44 @@
       </size>
      </property>
     </widget>
+    <widget class="QDoubleSpinBox" name="doubleSpinBox_alpha">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>94</y>
+       <width>66</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Scaling for image rectification:&lt;/p&gt;&lt;p&gt;* -1: default&lt;/p&gt;&lt;p&gt;*  0: no black area visible&lt;/p&gt;&lt;p&gt;*  1: the rectified image is decimated and shifted so that all the pixels from the original images from the cameras are retained in the rectified images (no source image pixels are lost)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="minimum">
+      <double>-1.000000000000000</double>
+     </property>
+     <property name="maximum">
+      <double>1.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.100000000000000</double>
+     </property>
+     <property name="value">
+      <double>0.000000000000000</double>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_17">
+     <property name="geometry">
+      <rect>
+       <x>39</x>
+       <y>100</y>
+       <width>41</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Alpha</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QLabel" name="label_16">
     <property name="geometry">
@@ -1235,13 +1273,61 @@
      </rect>
     </property>
     <property name="toolTip">
-     <string>AbsurdePhoton - www.absurdephoton.fr</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;( --- in my best Mario voice --- )&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Yes, it's meee... AbsurdePhoton!&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;AbsurdePhoton - www.absurdephoton.fr&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="text">
      <string/>
     </property>
     <property name="pixmap">
      <pixmap resource="resources.qrc">:/icons/absurdephoton.png</pixmap>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Disparity">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>140</y>
+      <width>111</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Graphically measure minimum and maximum disparity.&lt;/p&gt;&lt;p&gt;Won't work until:&lt;/p&gt;&lt;p&gt;* left and right images are populated&lt;/p&gt;&lt;p&gt;* rectification has been applied&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="text">
+     <string>Disparity</string>
+    </property>
+    <property name="icon">
+     <iconset resource="resources.qrc">
+      <normaloff>:/icons/disparity.png</normaloff>:/icons/disparity.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>32</width>
+      <height>32</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_18">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>50</y>
+      <width>41</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>v1.1: added visual measurement of minimum and maximum disparity</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Sunken</enum>
+    </property>
+    <property name="text">
+     <string>v1.1</string>
     </property>
    </widget>
    <zorder>frame</zorder>
@@ -1264,6 +1350,8 @@
    <zorder>label_15</zorder>
    <zorder>checkBox_fit</zorder>
    <zorder>label_16</zorder>
+   <zorder>Disparity</zorder>
+   <zorder>label_18</zorder>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

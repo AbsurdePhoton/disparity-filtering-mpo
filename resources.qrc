@@ -15,5 +15,6 @@
   <file>./icons/compute.png</file>
   <file>./icons/absurdephoton.png</file>
   <file>./icons/rectify.png</file>
+  <file>./icons/disparity.png</file>
 </qresource>
 </RCC>

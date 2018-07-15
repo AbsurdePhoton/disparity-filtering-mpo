@@ -4,7 +4,7 @@
 #
 #    by AbsurdePhoton - www.absurdephoton.fr
 #
-#                v1 - 2018/07/10
+#                v1.1 - 2018/07/15
 #
 #-------------------------------------------------*/
 
@@ -266,6 +266,12 @@ void MainWindow::on_Compute_clicked() { // compute the depth map
     cv::cvtColor(filtered_disp_vis, disp_color, CV_GRAY2RGB); // convert to color, better for saving the file
     ShowDepthmap();
 
+    // Reprojection 3D
+    //Mat project3D;
+    //cv::reprojectImageTo3D(filtered_disp, project3D, saveQ, true, CV_32F);
+    //project3D.convertTo(project3D, CV_8U);
+    //ui->label_3D->setPixmap(Mat2QPixmapResized(project3D, ui->label_3D->width(),ui->label_3D->height()));
+
     QApplication::restoreOverrideCursor(); // Restore cursor
 }
 
@@ -410,7 +416,7 @@ void MainWindow::on_Camera_clicked () { // load stereo camera matrix
     int ref_width, ref_height, ref_size;
     double error;
     // Read calibration results from XML file
-    QString filename = QFileDialog::getOpenFileName(this, "Select XML calibration file", "/home", "*.xml *.XML");
+    QString filename = QFileDialog::getOpenFileName(this, "Select XML calibration file", "/media/Photo/Travail/Calibration", "*.xml *.XML");
     if (filename.isNull())
         return;
 
@@ -446,14 +452,14 @@ void MainWindow::on_Rectify_clicked () {
     // Rectify stereo
     Mat R1, R2, P1, P2, Q;
     int flags = CALIB_ZERO_DISPARITY;
-    double alpha = -1;
+    double alpha = ui->doubleSpinBox_alpha->value();
     cv::Size size = left_image.size();
     stereoRectify(KL, DL, KR, DR, size, R, T, R1, R2, P1, P2, Q, flags, alpha);
 
     // Init undistortion
     Mat map11, map12, map21, map22;
-    initUndistortRectifyMap(KL, DL, R1, P1, size, CV_16SC2, map11, map12);
-    initUndistortRectifyMap(KR, DR, R2, P2, size, CV_16SC2, map21, map22);
+    initUndistortRectifyMap(KL, DL, R1, P1, size, CV_32FC2, map11, map12);
+    initUndistortRectifyMap(KR, DR, R2, P2, size, CV_32FC2, map21, map22);
 
     // Remap images
     flags = INTER_LINEAR;
@@ -467,11 +473,13 @@ void MainWindow::on_Rectify_clicked () {
     R = Mat2QPixmapResized(right_image, ui->label_image_right->width(), ui->label_image_right->height());
     ui->label_image_left->setPixmap(L);
     ui->label_image_right->setPixmap(R);
+
+    rectified = true;
 }
 
 void MainWindow::on_MPO_clicked () {
 
-    QString filename = QFileDialog::getOpenFileName(this, "Select MPO image file", "/home", "*.mpo *.MPO");
+    QString filename = QFileDialog::getOpenFileName(this, "Select MPO image file", "/media/Photo/Nus/Sabine/2018-03-09-Sabine-06-3D", "*.mpo *.MPO");
     if (filename.isNull())
         return;
     basename = filename.toUtf8().constData(); // basename is used after to save other files
@@ -492,6 +500,11 @@ void MainWindow::on_MPO_clicked () {
     R = Mat2QPixmapResized(right_image, ui->label_image_right->width(), ui->label_image_right->height());
     ui->label_image_left->setPixmap(L);
     ui->label_image_right->setPixmap(R);
+    ui->horizontalSlider_min_disparity->setMaximum(left_image.cols / 4);
+    ui->horizontalSlider_min_disparity->setMinimum(-left_image.cols / 4);
+
+    computed = false;
+    rectified = false;
 }
 
 void MainWindow::on_Negative_clicked () { // negative colors of the depthmap
@@ -586,7 +599,7 @@ void MainWindow::on_checkBox_fit_clicked() // Loads left image
 
 void MainWindow::on_Left_clicked() // Loads left image
 {
-    QString filename = QFileDialog::getOpenFileName(this, "Select left picture file", "/home");
+    QString filename = QFileDialog::getOpenFileName(this, "Select left picture file", "/media/Photo/Nus/Sabine/2018-03-09-Sabine-06-3D");
     if (filename.isNull() || filename.isEmpty())
         return;
     basename = filename.toUtf8().constData(); // basename is used after to save other files
@@ -601,13 +614,17 @@ void MainWindow::on_Left_clicked() // Loads left image
     set_SADWindowSize(); // adapt parameters automatically
 
     computed = false; // depthmap not yet computed
+    rectified = false;
+
     ui->label_depth_map->setPixmap(QPixmap()); // Delete the depthmap image
     ui->label_depth_map->setText("Depthmap not yet computed"); // Text in the depthmap area
+    ui->horizontalSlider_min_disparity->setMaximum(left_image.cols / 4);
+    ui->horizontalSlider_min_disparity->setMinimum(-left_image.cols / 4);
 }
 
 void MainWindow::on_Right_clicked() // Loads right image
 {
-    QString filename = QFileDialog::getOpenFileName(this, "Select right picture file", "/home");
+    QString filename = QFileDialog::getOpenFileName(this, "Select right picture file", "/media/Photo/Nus/Sabine/2018-03-09-Sabine-06-3D");
 
     if (filename.isNull() || filename.isEmpty())
         return;
@@ -623,6 +640,33 @@ void MainWindow::on_Right_clicked() // Loads right image
     set_SADWindowSize(); // adapt parameters automatically
 
     computed = false; // depthmap not yet computed
+    rectified = false;
+
     ui->label_depth_map->setPixmap(QPixmap()); // Delete the depthmap image
     ui->label_depth_map->setText("Depthmap not yet computed"); // Text in the depthmap area
+    ui->horizontalSlider_min_disparity->setMaximum(right_image.cols / 4);
+    ui->horizontalSlider_min_disparity->setMinimum(-right_image.cols / 4);
+}
+
+void MainWindow::on_Disparity_clicked() // Open disparity window
+{
+    if (left_image.empty() || right_image.empty() || (!rectified)) // check both images have been loaded AND rectified
+        return;
+
+    Disparity *disp_form = new Disparity(this); // create form window
+    disp_form->setLeftImage(left_image); // pass the left & right images variables
+    disp_form->setRightImage(right_image);
+
+    int result = disp_form->exec(); // execute the form
+    if (result == QDialog::Rejected) // if cancel
+        return;
+
+    int min_disparity = disp_form->getBackgroundDisparity(); // get min disparity value
+    ui->horizontalSlider_min_disparity->setValue(min_disparity); // set min disparity in the gui
+    int num_disparity = disp_form->getForegroundDisparity() - min_disparity; // get number of disparity value
+    if ((num_disparity % 16) != 0) { // must be divisible by 16
+        num_disparity -= (num_disparity % 16); // correct the value
+        num_disparity += 16; // add 16 to be sure
+    }
+    ui->horizontalSlider_num_of_disparity->setValue(num_disparity); // set number of disparity in the gui
 }

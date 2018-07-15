@@ -2,7 +2,7 @@
  * File  : mat-image-tools.cpp
  * Author: AbsurdePhoton
  *
- * v1 2018/07/08
+ * v1.1 2018/07/15
  *
  * Converts mat images to QPixmap or QImage
  * Set brightness and contrast to Mat image
@@ -15,6 +15,8 @@
 
 using namespace std;
 using namespace cv;
+
+enum Direction{ShiftUp=1, ShiftRight, ShiftDown, ShiftLeft};
 
 QImage Mat2QImage(cv::Mat const& src)
 {
@@ -116,4 +118,29 @@ QImage cvMatToQImage(const cv::Mat &inMat)
     }
 
     return QImage();
+}
+
+Mat shiftFrame(cv::Mat frame, int pixels, Direction direction)
+{
+    //create a same sized temporary Mat with all the pixels flagged as invalid (-1)
+    Mat temp = Mat::zeros(frame.size(), frame.type());
+
+    switch (direction)
+    {
+    case(ShiftUp) :
+        frame(cv::Rect(0, pixels, frame.cols, frame.rows - pixels)).copyTo(temp(cv::Rect(0, 0, temp.cols, temp.rows - pixels)));
+        break;
+    case(ShiftRight) :
+        frame(cv::Rect(0, 0, frame.cols - pixels, frame.rows)).copyTo(temp(cv::Rect(pixels, 0, frame.cols - pixels, frame.rows)));
+        break;
+    case(ShiftDown) :
+        frame(cv::Rect(0, 0, frame.cols, frame.rows - pixels)).copyTo(temp(cv::Rect(0, pixels, frame.cols, frame.rows - pixels)));
+        break;
+    case(ShiftLeft) :
+        frame(cv::Rect(pixels, 0, frame.cols - pixels, frame.rows)).copyTo(temp(cv::Rect(0, 0, frame.cols - pixels, frame.rows)));
+        break;
+    default:
+        std::cout << "Shift direction is not set properly" << std::endl;
+    }
+    return temp;
 }

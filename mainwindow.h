@@ -4,13 +4,14 @@
 #
 #    by AbsurdePhoton - www.absurdephoton.fr
 #
-#                v1 - 2018/07/10
+#                v1.1 - 2018/07/15
 #
 #-------------------------------------------------*/
 
-
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
+
+#include <disparity.h>
 
 #include <iostream>
 
@@ -67,6 +68,8 @@ private slots:
 
     void on_checkBox_fit_clicked();
 
+    void on_Disparity_clicked();
+
     void on_horizontalSlider_num_of_disparity_sliderMoved(int position);
 
     void on_horizontalSlider_num_of_disparity_valueChanged(int value);
@@ -103,8 +106,7 @@ private:
     // the UI object, to access the UI elements created with Qt Designer
     Ui::MainWindow *ui;
 
-    // the left and right pictures, converted to OpenCV Mat format
-    cv::Mat left_image, right_image;
+    cv::Mat left_image, right_image; // left and right images
     cv::Mat disp_color; // Processed stereo map
     Mat KR, KL, DL, DR, R, F, E;
     Vec3d T;
@@ -117,6 +119,7 @@ private:
     // To know if a depthmap has been computed
     bool computed;
     bool parameters;
+    bool rectified;
 
     // functions to manage constraints on sliders
     void set_SADWindowSize();  // manage max value of SADWindowSize slider
