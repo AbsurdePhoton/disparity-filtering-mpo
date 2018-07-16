@@ -35,6 +35,7 @@ public:
 private slots:
     void on_horizontalSlider_background_disparity_sliderMoved(int value);
     void on_horizontalSlider_foreground_disparity_sliderMoved(int value);
+    void on_checkBox_fit_clicked();
 
 private:
     Ui::Disparity *ui;

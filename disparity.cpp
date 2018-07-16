@@ -23,6 +23,22 @@ Disparity::Disparity(QWidget *parent) :
 
     background_disparity = 50;
     foreground_disparity = 200;
+
+    ui->label_background_disparity->setBackgroundRole(QPalette::Base);
+    ui->label_background_disparity->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+    ui->label_background_disparity->setScaledContents(true);
+
+    ui->label_foreground_disparity->setBackgroundRole(QPalette::Base);
+    ui->label_foreground_disparity->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+    ui->label_foreground_disparity->setScaledContents(true);
+
+    ui->scrollArea_background->setBackgroundRole(QPalette::Dark);
+    ui->scrollArea_background->setWidgetResizable(true);
+    ui->scrollAreaWidgetContents_background->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+
+    ui->scrollArea_foreground->setBackgroundRole(QPalette::Dark);
+    ui->scrollArea_foreground->setWidgetResizable(true);
+    ui->scrollAreaWidgetContents_foreground->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
 }
 
 Disparity::~Disparity()
@@ -41,7 +57,24 @@ void Disparity::DisplayShiftedBackground() {
     else shift = shiftFrame(right_image, -background_disparity, ShiftLeft);
 
     cv::addWeighted(left_image, 0.5, shift, 0.5, 0, result, -1);
-    ui->label_background_disparity->setPixmap(Mat2QPixmapResized(result, ui->label_background_disparity->width(), ui->label_background_disparity->height()));
+
+    QPixmap D;
+    if (ui->checkBox_fit->isChecked()) { // Fit to the display area
+        D = Mat2QPixmapResized(result, ui->scrollArea_background->width(), ui->scrollArea_background->height());
+        ui->scrollArea_background->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // Make scrollbars appear
+        ui->scrollArea_background->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    } else { // Zoom = 100%
+        D = Mat2QPixmap(result);
+        ui->scrollArea_background->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn); // Make scrollbars appear
+        ui->scrollArea_background->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    }
+
+    ui->label_background_disparity->setFixedWidth(D.width()); // Resize the depthmap label
+    ui->label_background_disparity->setFixedHeight(D.height());
+    ui->scrollAreaWidgetContents_background->setFixedWidth(D.width()); // Resize the container
+    ui->scrollAreaWidgetContents_background->setFixedHeight(D.height());
+
+    ui->label_background_disparity->setPixmap(D);
 }
 
 void Disparity::DisplayShiftedForeground() {
@@ -54,7 +87,25 @@ void Disparity::DisplayShiftedForeground() {
         else shift = shiftFrame(right_image, -foreground_disparity, ShiftLeft);
 
     cv::addWeighted(left_image, 0.5, shift, 0.5, 0, result, -1);
-    ui->label_foreground_disparity->setPixmap(Mat2QPixmapResized(result, ui->label_foreground_disparity->width(), ui->label_foreground_disparity->height()));
+
+    QPixmap D;
+    if (ui->checkBox_fit->isChecked()) { // Fit to the display area
+        D = Mat2QPixmapResized(result, ui->scrollArea_foreground->width(), ui->scrollArea_foreground->height());
+        ui->scrollArea_foreground->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // Make scrollbars appear
+        ui->scrollArea_foreground->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    } else // Zoom = 100%
+    {
+        D = Mat2QPixmap(result);
+        ui->scrollArea_foreground->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn); // Make scrollbars appear
+        ui->scrollArea_foreground->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    }
+
+    ui->label_foreground_disparity->setFixedWidth(D.width()); // Resize the depthmap label
+    ui->label_foreground_disparity->setFixedHeight(D.height());
+    ui->scrollAreaWidgetContents_foreground->setFixedWidth(D.width()); // Resize the container
+    ui->scrollAreaWidgetContents_foreground->setFixedHeight(D.height());
+
+    ui->label_foreground_disparity->setPixmap(D);
 }
 
 void Disparity::setLeftImage(cv::Mat left_img) {
@@ -93,4 +144,10 @@ void Disparity::on_horizontalSlider_foreground_disparity_sliderMoved(int value) 
     foreground_disparity = value;
     DisplayShiftedForeground();
     qApp->processEvents();
+}
+
+void Disparity::on_checkBox_fit_clicked() // Loads left image
+{
+    DisplayShiftedBackground();
+    DisplayShiftedForeground();
 }

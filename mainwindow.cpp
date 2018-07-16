@@ -650,8 +650,14 @@ void MainWindow::on_Right_clicked() // Loads right image
 
 void MainWindow::on_Disparity_clicked() // Open disparity window
 {
-    if (left_image.empty() || right_image.empty() || (!rectified)) // check both images have been loaded AND rectified
+    if (left_image.empty() || right_image.empty()) // check both images have been loaded AND rectified
         return;
+
+    if (!rectified) {
+        int notRectified = QMessageBox::question(this, "Are you sure ?", "You didn't rectify the images. Are they already rectified ?", QMessageBox::Yes|QMessageBox::No);
+        if (notRectified == QMessageBox::No)
+            return;
+    }
 
     Disparity *disp_form = new Disparity(this); // create form window
     disp_form->setLeftImage(left_image); // pass the left & right images variables
@@ -663,7 +669,7 @@ void MainWindow::on_Disparity_clicked() // Open disparity window
 
     int min_disparity = disp_form->getBackgroundDisparity(); // get min disparity value
     ui->horizontalSlider_min_disparity->setValue(min_disparity); // set min disparity in the gui
-    int num_disparity = disp_form->getForegroundDisparity() - min_disparity; // get number of disparity value
+    int num_disparity = std::abs(disp_form->getForegroundDisparity() - min_disparity); // get number of disparity value
     if ((num_disparity % 16) != 0) { // must be divisible by 16
         num_disparity -= (num_disparity % 16); // correct the value
         num_disparity += 16; // add 16 to be sure
