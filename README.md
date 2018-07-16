@@ -1,8 +1,17 @@
 # disparity-filtering-mpo
-### v1.1 - 2018-07-15 - Added visual measurement of disparity
 ## Disparity and depth maps with QT and OpenCV with support for classic image files and MPO stereo pairs</b>
+### v1.2 - 2018-08-16 - Added visual manual alignment of stereo pair
 
 ![Screenshot](screenshot.jpg)
+<br/>
+
+## HISTORY
+
+* v1.2 - 2018-08-16 - Added visual manual alignment of stereo pair
+* v1.1 - 2018-07-15 - Added visual measurement of disparity
+* v1.0 - 2018-07-10 - Implementation of OpenCV stereoBM & stereoSGBM to obtain disparity / depth maps from 3D stereo pairs
+<br/>
+<br/>
 
 ## LICENSE
 
@@ -36,7 +45,7 @@ This software should also work under Microsoft Windows: if you tried it successf
 You will need the calibration files for your camera / lens, produced by my calibration utility : https://github.com/AbsurdePhoton/calib-mpo
 </br>
 
-The rest of the explanation will come soon, promise!
+No explanation for the moment, the gui elements have hover-based tooltips that explain everything.
 <br/>
 <br/>
 
