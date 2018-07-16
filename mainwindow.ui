@@ -119,7 +119,7 @@
         <string>Matched block size. It must be an odd number &gt;=1 . Normally, it should be somewhere in the 3..11 range.</string>
        </property>
        <property name="minimum">
-        <number>5</number>
+        <number>1</number>
        </property>
        <property name="maximum">
         <number>255</number>
@@ -847,7 +847,7 @@
     <property name="geometry">
      <rect>
       <x>770</x>
-      <y>30</y>
+      <y>20</y>
       <width>81</width>
       <height>41</height>
      </rect>
@@ -905,7 +905,7 @@
      </rect>
     </property>
     <property name="toolTip">
-     <string>Maximize the gray palette</string>
+     <string>Maximize the gray palette of the depthmap</string>
     </property>
     <property name="text">
      <string> Normalize</string>
@@ -1032,7 +1032,7 @@
      </rect>
     </property>
     <property name="toolTip">
-     <string>Rotate the stereo pair 90° clockwise</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Rotate the stereo pair 90° clockwise.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Won't work until left and right images are populated.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="text">
      <string> Rotate</string>
@@ -1058,7 +1058,7 @@
      </rect>
     </property>
     <property name="toolTip">
-     <string>Swap left and right images</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Swap left and right images.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Won't work until left and right images are populated.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="text">
      <string> Swap</string>
@@ -1156,7 +1156,7 @@
       </rect>
      </property>
      <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Save the stereo pair in PNG format - only the base name is used, to which will be added the left and right information.&lt;/p&gt;&lt;p&gt;Only save the images after they are rectified.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Save the stereo pair in PNG format - only the base name is used, to which will be added the left and right information.&lt;/p&gt;&lt;p&gt;Only save the images after you have rectified them.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="text">
       <string>Save images</string>
@@ -1292,7 +1292,7 @@
      </rect>
     </property>
     <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Graphically measure minimum and maximum disparity.&lt;/p&gt;&lt;p&gt;Won't work until:&lt;/p&gt;&lt;p&gt;* left and right images are populated&lt;/p&gt;&lt;p&gt;* rectification has been applied&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Graphically measure minimum and maximum disparity: much better than the trial-and-error approach with the sliders!&lt;/p&gt;&lt;p&gt;Won't work until left and right images are populated.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="text">
      <string>Disparity</string>
@@ -1318,7 +1318,7 @@
      </rect>
     </property>
     <property name="toolTip">
-     <string>v1.1: added visual measurement of minimum and maximum disparity</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;* v1.2: added visual manual adjustment of alignment right image against left image&lt;/p&gt;&lt;p&gt;* v1.1: added visual measurement of minimum and maximum disparity&lt;/p&gt;&lt;p&gt;* v1.0: implementation of openCV StereoBM &amp;amp; stereoSGBM methods to compute a disparity / depth map&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::Box</enum>
@@ -1327,7 +1327,33 @@
      <enum>QFrame::Sunken</enum>
     </property>
     <property name="text">
-     <string>v1.1</string>
+     <string>v1.2</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Adjust">
+    <property name="geometry">
+     <rect>
+      <x>770</x>
+      <y>73</y>
+      <width>81</width>
+      <height>35</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Manually adjust the right image alignmet against the left image.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Won't work until left and right images are populated.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="text">
+     <string> Align</string>
+    </property>
+    <property name="icon">
+     <iconset resource="resources.qrc">
+      <normaloff>:/icons/adjust.png</normaloff>:/icons/adjust.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>20</width>
+      <height>20</height>
+     </size>
     </property>
    </widget>
    <zorder>frame</zorder>
@@ -1352,6 +1378,7 @@
    <zorder>label_16</zorder>
    <zorder>Disparity</zorder>
    <zorder>label_18</zorder>
+   <zorder>Adjust</zorder>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

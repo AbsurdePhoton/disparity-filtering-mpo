@@ -4,7 +4,7 @@
 #
 #    by AbsurdePhoton - www.absurdephoton.fr
 #
-#                v1.1 - 2018/07/15
+#                v1.2 - 2018/07/16
 #
 #-------------------------------------------------*/
 
@@ -416,7 +416,7 @@ void MainWindow::on_Camera_clicked () { // load stereo camera matrix
     int ref_width, ref_height, ref_size;
     double error;
     // Read calibration results from XML file
-    QString filename = QFileDialog::getOpenFileName(this, "Select XML calibration file", "/media/Photo/Travail/Calibration", "*.xml *.XML");
+    QString filename = QFileDialog::getOpenFileName(this, "Select XML calibration file", "/media/Photo/Travail/Calibration", "XML parameters (*.xml *.XML)");
     if (filename.isNull())
         return;
 
@@ -479,7 +479,7 @@ void MainWindow::on_Rectify_clicked () {
 
 void MainWindow::on_MPO_clicked () {
 
-    QString filename = QFileDialog::getOpenFileName(this, "Select MPO image file", "/media/Photo/Nus/Sabine/2018-03-09-Sabine-06-3D", "*.mpo *.MPO");
+    QString filename = QFileDialog::getOpenFileName(this, "Select MPO image file", "/media/Photo/Nus/Sabine/2018-03-09-Sabine-06-3D", "MPO image (*.mpo *.MPO)");
     if (filename.isNull())
         return;
     basename = filename.toUtf8().constData(); // basename is used after to save other files
@@ -599,7 +599,7 @@ void MainWindow::on_checkBox_fit_clicked() // Loads left image
 
 void MainWindow::on_Left_clicked() // Loads left image
 {
-    QString filename = QFileDialog::getOpenFileName(this, "Select left picture file", "/media/Photo/Nus/Sabine/2018-03-09-Sabine-06-3D");
+    QString filename = QFileDialog::getOpenFileName(this, "Select left picture file", "/media/Photo/Nus/Sabine/2018-03-09-Sabine-06-3D", "Images (*.jpg *.JPG *.jpeg *.JPEG *.jp2 *.JP2 *.png *.PNG *.tif *.TIF *.tiff *.TIFF *.bmp *.BMP)");
     if (filename.isNull() || filename.isEmpty())
         return;
     basename = filename.toUtf8().constData(); // basename is used after to save other files
@@ -624,7 +624,7 @@ void MainWindow::on_Left_clicked() // Loads left image
 
 void MainWindow::on_Right_clicked() // Loads right image
 {
-    QString filename = QFileDialog::getOpenFileName(this, "Select right picture file", "/media/Photo/Nus/Sabine/2018-03-09-Sabine-06-3D");
+    QString filename = QFileDialog::getOpenFileName(this, "Select right picture file", "/media/Photo/Nus/Sabine/2018-03-09-Sabine-06-3D", "Images (*.jpg *.JPG *.jpeg *.JPEG *.jp2 *.JP2 *.png *.PNG *.tif *.TIF *.tiff *.TIFF *.bmp *.BMP)");
 
     if (filename.isNull() || filename.isEmpty())
         return;
@@ -654,7 +654,7 @@ void MainWindow::on_Disparity_clicked() // Open disparity window
         return;
 
     if (!rectified) {
-        int notRectified = QMessageBox::question(this, "Are you sure ?", "You didn't rectify the images. Are they already rectified ?", QMessageBox::Yes|QMessageBox::No);
+        int notRectified = QMessageBox::question(this, "Are you sure ?", "You didn't rectify the images with the camera parameters. Are you sure?", QMessageBox::Yes|QMessageBox::No);
         if (notRectified == QMessageBox::No)
             return;
     }
@@ -675,4 +675,27 @@ void MainWindow::on_Disparity_clicked() // Open disparity window
         num_disparity += 16; // add 16 to be sure
     }
     ui->horizontalSlider_num_of_disparity->setValue(num_disparity); // set number of disparity in the gui
+}
+
+void MainWindow::on_Adjust_clicked() // Open adjust window
+{
+    if (left_image.empty() || right_image.empty()) // check both images have been loaded AND rectified
+        return;
+
+    if (!rectified) {
+        int notRectified = QMessageBox::question(this, "Are you sure ?", "You didn't rectify the images with the camera parameters. Are you sure?", QMessageBox::Yes|QMessageBox::No);
+        if (notRectified == QMessageBox::No)
+            return;
+    }
+
+    Adjust *adj_form = new Adjust(this); // create form window
+    adj_form->setLeftImage(left_image); // pass the left & right images variables
+    adj_form->setRightImage(right_image);
+
+    int result = adj_form->exec(); // execute the form
+    if (result == QDialog::Rejected) // if cancel
+        return;
+
+    right_image = adj_form->getResult();
+    ui->label_image_right->setPixmap(Mat2QPixmapResized(right_image, ui->label_image_right->width(), ui->label_image_right->height())); // Display right image
 }

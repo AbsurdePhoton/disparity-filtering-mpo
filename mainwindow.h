@@ -4,7 +4,7 @@
 #
 #    by AbsurdePhoton - www.absurdephoton.fr
 #
-#                v1.1 - 2018/07/15
+#                v1.2 - 2018/07/16
 #
 #-------------------------------------------------*/
 
@@ -12,6 +12,7 @@
 #define MAINWINDOW_H
 
 #include <disparity.h>
+#include <adjust.h>
 
 #include <iostream>
 
@@ -69,6 +70,8 @@ private slots:
     void on_checkBox_fit_clicked();
 
     void on_Disparity_clicked();
+
+    void on_Adjust_clicked();
 
     void on_horizontalSlider_num_of_disparity_sliderMoved(int position);
 

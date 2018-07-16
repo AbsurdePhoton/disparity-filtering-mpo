@@ -4,7 +4,7 @@
 #
 #    by AbsurdePhoton - www.absurdephoton.fr
 #
-#                v1.1 - 2018/07/15
+#                v1.2 - 2018/07/16
 #
 #-------------------------------------------------
 
@@ -22,15 +22,18 @@ SOURCES +=  main.cpp\
             mainwindow.cpp \
             mpo.cpp \
             mat-image-tools.cpp \
-    disparity.cpp
+    disparity.cpp \
+    adjust.cpp
 
 HEADERS  += mainwindow.h \
             mpo.h \
             mat-image-tools.h \
-    disparity.h
+    disparity.h \
+    adjust.h
 
 FORMS    += mainwindow.ui \
-    disparity.ui
+    disparity.ui \
+    adjust.ui
 
 # we add the package opencv to pkg-config
 CONFIG += link_pkgconfig
