@@ -416,7 +416,7 @@ void MainWindow::on_Camera_clicked () { // load stereo camera matrix
     int ref_width, ref_height, ref_size;
     double error;
     // Read calibration results from XML file
-    QString filename = QFileDialog::getOpenFileName(this, "Select XML calibration file", "/media/Photo/Travail/Calibration", "XML parameters (*.xml *.XML)");
+    QString filename = QFileDialog::getOpenFileName(this, "Select XML calibration file", ".", "XML parameters (*.xml *.XML)");
     if (filename.isNull())
         return;
 
@@ -479,7 +479,7 @@ void MainWindow::on_Rectify_clicked () {
 
 void MainWindow::on_MPO_clicked () {
 
-    QString filename = QFileDialog::getOpenFileName(this, "Select MPO image file", "/media/Photo/Nus/Sabine/2018-03-09-Sabine-06-3D", "MPO image (*.mpo *.MPO)");
+    QString filename = QFileDialog::getOpenFileName(this, "Select MPO image file", ".", "MPO image (*.mpo *.MPO)");
     if (filename.isNull())
         return;
     basename = filename.toUtf8().constData(); // basename is used after to save other files
@@ -599,7 +599,7 @@ void MainWindow::on_checkBox_fit_clicked() // Loads left image
 
 void MainWindow::on_Left_clicked() // Loads left image
 {
-    QString filename = QFileDialog::getOpenFileName(this, "Select left picture file", "/media/Photo/Nus/Sabine/2018-03-09-Sabine-06-3D", "Images (*.jpg *.JPG *.jpeg *.JPEG *.jp2 *.JP2 *.png *.PNG *.tif *.TIF *.tiff *.TIFF *.bmp *.BMP)");
+    QString filename = QFileDialog::getOpenFileName(this, "Select left picture file", ".", "Images (*.jpg *.JPG *.jpeg *.JPEG *.jp2 *.JP2 *.png *.PNG *.tif *.TIF *.tiff *.TIFF *.bmp *.BMP)");
     if (filename.isNull() || filename.isEmpty())
         return;
     basename = filename.toUtf8().constData(); // basename is used after to save other files
@@ -624,7 +624,7 @@ void MainWindow::on_Left_clicked() // Loads left image
 
 void MainWindow::on_Right_clicked() // Loads right image
 {
-    QString filename = QFileDialog::getOpenFileName(this, "Select right picture file", "/media/Photo/Nus/Sabine/2018-03-09-Sabine-06-3D", "Images (*.jpg *.JPG *.jpeg *.JPEG *.jp2 *.JP2 *.png *.PNG *.tif *.TIF *.tiff *.TIFF *.bmp *.BMP)");
+    QString filename = QFileDialog::getOpenFileName(this, "Select right picture file", ".", "Images (*.jpg *.JPG *.jpeg *.JPEG *.jp2 *.JP2 *.png *.PNG *.tif *.TIF *.tiff *.TIFF *.bmp *.BMP)");
 
     if (filename.isNull() || filename.isEmpty())
         return;
