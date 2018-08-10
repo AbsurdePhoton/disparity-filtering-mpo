@@ -523,7 +523,7 @@ void MainWindow::on_Save_depthmap_clicked() { // save depthmap in PNG format
     if (this->disp_color.empty()) // check that depthmap exists
             return;
 
-    QString filename = QFileDialog::getSaveFileName(this, "Save depthmap to image...", "./" + QString::fromStdString(basename) + ".png", NULL);
+    QString filename = QFileDialog::getSaveFileName(this, "Save depthmap to image...", "./" + QString::fromStdString(basename + "-depthmap") + ".png", NULL);
     std::string filename_s = filename.toUtf8().constData();
 
     if (filename.isNull() || filename.isEmpty())
