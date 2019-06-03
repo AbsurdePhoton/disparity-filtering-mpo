@@ -4,7 +4,7 @@
 #
 #    by AbsurdePhoton - www.absurdephoton.fr
 #
-#                v1.2 - 2018/07/16
+#                v1.3 - 2019/06/03
 #
 #-------------------------------------------------*/
 
@@ -15,6 +15,7 @@
 
 #include "mpo.h"
 #include "mat-image-tools.h"
+#include <opencv2/stereo.hpp>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -35,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->horizontalSlider_speckle_window_size->setValue(0);
     ui->horizontalSlider_speckle_range->setValue(0);
     ui->horizontalSlider_disp_12_max_diff->setValue(-1);
+    ui->horizontalSlider_disparity_levels->setValue(50);
     // Adjust P1 and P2 values auto
     int value = ui->horizontalSlider_SAD_window_size->value();
     ui->horizontalSlider_P2->setValue(96*value*value);
@@ -47,6 +49,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->mode->addItem("SGBM_3WAY", QVariant(2));
     ui->mode->addItem("HH4", QVariant(3));
     ui->mode->setCurrentIndex(2);
+    // Set visible items
+    ui->frame_BM_SGBM->setVisible(true);
+    ui->frame_quasi->setVisible(false);
 
     ui->label_depth_map->setBackgroundRole(QPalette::Base);
     ui->label_depth_map->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
@@ -58,6 +63,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     computed = false; // depthmap not yet computed
     parameters = false; // XML file not loaded
+    basedir = "/home";
 }
 
 MainWindow::~MainWindow()
@@ -107,6 +113,7 @@ void MainWindow::on_Compute_clicked() { // compute the depth map
     cv::String algo; // stereo matching method (bm or sgbm)
     if (ui->radioButton_BM->isChecked()) algo = "bm";
     if (ui->radioButton_SGBM->isChecked()) algo = "sgbm";
+    if (ui->radioButton_quasi->isChecked()) algo = "quasi";
     int max_disp = ui->horizontalSlider_num_of_disparity->value();
     int wsize = ui->horizontalSlider_SAD_window_size->value(); // Window size (SAD)
     int mode = ui->mode->itemData(ui->mode->currentIndex()).toInt(); // SGBM 3-way mode
@@ -122,149 +129,167 @@ void MainWindow::on_Compute_clicked() { // compute the depth map
     cv::String filter;
     if (ui->checkBox_confidence->isChecked()) filter = "wls_conf"; else filter = "wls_no_conf";
 
-    // load_views
-    cv::Mat left  = left_image;
-    cv::Mat right = right_image;
-
-    cv::Mat left_for_matcher, right_for_matcher;
-    cv::Mat left_disp,right_disp;
-    cv::Mat filtered_disp;
-    cv::Mat conf_map = cv::Mat(left.rows,left.cols,CV_8U);
-    conf_map = cv::Scalar(255);
-    cv::Rect ROI;
-    Ptr<cv::ximgproc::DisparityWLSFilter> wls_filter;
-
-    if(filter=="wls_conf") // filtering with confidence (significantly better quality than wls_no_conf)
+    if(algo=="quasi")
     {
-        left_for_matcher  = left.clone();
-        right_for_matcher = right.clone();
+        cv::Size frameSize = left_image.size();
+        Ptr<stereo::QuasiDenseStereo> stereo = stereo::QuasiDenseStereo::create(frameSize);
+        stereo->process(left_image, right_image);
+        uint8_t displvl = ui->horizontalSlider_disparity_levels->value();
+        cv::Mat disp;
+        disp = stereo->getDisparity(displvl);
 
-        if(algo=="bm")
-        {
-            Ptr<cv::StereoBM> left_matcher = cv::StereoBM::create(max_disp,wsize);
-            left_matcher->setPreFilterSize(ui->horizontalSlider_pre_filter_size->value());  // must be an odd between 5 and 255
-            left_matcher->setPreFilterCap(ui->horizontalSlider_pre_filter_cap->value());  // must be within 1 and 63
-            left_matcher->setBlockSize(ui->horizontalSlider_SAD_window_size->value());  // must be odd, be within 5..255 and be not larger than image width or height
-            left_matcher->setMinDisparity(ui->horizontalSlider_min_disparity->value()); // normally at 0
-            left_matcher->setNumDisparities(ui->horizontalSlider_num_of_disparity->value());  // must be > 0 and divisible by 16
-            left_matcher->setTextureThreshold(ui->horizontalSlider_texture_threshold->value());  // must be non-negative
-            left_matcher->setUniquenessRatio(ui->horizontalSlider_uniqueness_ratio->value());  // must be non-negative
-            left_matcher->setSpeckleWindowSize(ui->horizontalSlider_speckle_window_size->value()); // 0 to disable, set to 50-200
-            left_matcher->setSpeckleRange(ui->horizontalSlider_speckle_range->value()); // 1 or 2 is good, 0 to disable
-            left_matcher->setDisp12MaxDiff(ui->horizontalSlider_disp_12_max_diff->value()); // negative = disabled
+        // Visualization
+        computed = true; // Indicate that a depthmap exists
 
-            wls_filter = cv::ximgproc::createDisparityWLSFilter(left_matcher);
-            Ptr<cv::StereoMatcher> right_matcher = cv::ximgproc::createRightMatcher(left_matcher);
-
-            cv::cvtColor(left_for_matcher,  left_for_matcher,  cv::COLOR_BGR2GRAY); // Convert to gray, needed by bm function
-            cv::cvtColor(right_for_matcher, right_for_matcher, cv::COLOR_BGR2GRAY);
-
-            left_matcher-> compute(left_for_matcher, right_for_matcher,left_disp);
-            right_matcher->compute(right_for_matcher,left_for_matcher, right_disp);
-        }
-        else if(algo=="sgbm")
-        {
-            Ptr<cv::StereoSGBM> left_matcher  = cv::StereoSGBM::create(0,max_disp,wsize);
-            left_matcher->setPreFilterCap(ui->horizontalSlider_pre_filter_size->value());  // must be within 1 and 63
-            left_matcher->setBlockSize(ui->horizontalSlider_SAD_window_size->value());  // must be odd, be within 5..255 and be not larger than image width or height
-            left_matcher->setMinDisparity(ui->horizontalSlider_min_disparity->value()); // normally at 0
-            left_matcher->setNumDisparities(ui->horizontalSlider_num_of_disparity->value());  // must be > 0 and divisible by 16
-            left_matcher->setUniquenessRatio(ui->horizontalSlider_uniqueness_ratio->value());  // must be non-negative
-            left_matcher->setSpeckleWindowSize(ui->horizontalSlider_speckle_window_size->value()); // 0 to disable, set to 50-200
-            left_matcher->setSpeckleRange(ui->horizontalSlider_speckle_range->value()); // 1 or 2 is good, 0 to disable
-            left_matcher->setDisp12MaxDiff(ui->horizontalSlider_disp_12_max_diff->value()); // negative = disabled
-            left_matcher->setP1(ui->horizontalSlider_P1->value());
-            left_matcher->setP2(ui->horizontalSlider_P2->value());
-            left_matcher->setMode(mode);
-
-            wls_filter =  cv::ximgproc::createDisparityWLSFilter(left_matcher);
-            Ptr<cv::StereoMatcher> right_matcher = cv::ximgproc::createRightMatcher(left_matcher);
-
-            left_matcher-> compute(left_for_matcher, right_for_matcher,left_disp);
-            right_matcher->compute(right_for_matcher,left_for_matcher, right_disp);
-        }
-
-        // filtering
-        wls_filter->setLambda(lambda);
-        wls_filter->setSigmaColor(sigma);
-        wls_filter->filter(left_disp,left,filtered_disp,right_disp);
-
-        conf_map = wls_filter->getConfidenceMap();
-
-        ROI = wls_filter->getROI(); // Get the ROI that was used in the last filter call
+        // convert the image to a QPixmap and display it
+        cv::cvtColor(disp, disp_color, COLOR_GRAY2RGB); // convert to color, better for saving the file
+        ShowDepthmap();
     }
-    else if(filter=="wls_no_conf")
-    {
-        /* There is no convenience function for the case of filtering with no confidence, so we
-        will need to set the ROI and matcher parameters manually */
+    else {
+        // load_views
+        cv::Mat left  = left_image;
+        cv::Mat right = right_image;
 
-        left_for_matcher  = left.clone();
-        right_for_matcher = right.clone();
+        cv::Mat left_for_matcher, right_for_matcher;
+        cv::Mat left_disp,right_disp;
+        cv::Mat filtered_disp;
+        cv::Mat conf_map = cv::Mat(left.rows,left.cols,CV_8U);
+        conf_map = cv::Scalar(255);
+        cv::Rect ROI;
+        Ptr<cv::ximgproc::DisparityWLSFilter> wls_filter;
 
-        if(algo=="bm")
+        if(filter=="wls_conf") // filtering with confidence (significantly better quality than wls_no_conf)
         {
-            Ptr<cv::StereoBM> matcher  = cv::StereoBM::create(max_disp,wsize);
-            matcher->setPreFilterSize(ui->horizontalSlider_pre_filter_size->value());  // must be an odd between 5 and 255
-            matcher->setPreFilterCap(ui->horizontalSlider_pre_filter_cap->value());  // must be within 1 and 63
-            matcher->setBlockSize(ui->horizontalSlider_SAD_window_size->value());  // must be odd, be within 5..255 and be not larger than image width or height
-            matcher->setMinDisparity(ui->horizontalSlider_min_disparity->value()); // normally at 0
-            matcher->setNumDisparities(ui->horizontalSlider_num_of_disparity->value());  // must be > 0 and divisible by 16
-            matcher->setTextureThreshold(ui->horizontalSlider_texture_threshold->value());  // must be non-negative
-            matcher->setUniquenessRatio(ui->horizontalSlider_uniqueness_ratio->value());  // must be non-negative
-            matcher->setSpeckleWindowSize(ui->horizontalSlider_speckle_window_size->value()); // 0 to disable, set to 50-200
-            matcher->setSpeckleRange(ui->horizontalSlider_speckle_range->value()); // 1 or 2 is good, 0 to disable
-            matcher->setDisp12MaxDiff(ui->horizontalSlider_disp_12_max_diff->value()); // negative = disabled
+            left_for_matcher  = left.clone();
+            right_for_matcher = right.clone();
 
-            cv::cvtColor(left_for_matcher,  left_for_matcher, cv::COLOR_BGR2GRAY); // Convert to gray, needed by bm function
-            cv::cvtColor(right_for_matcher, right_for_matcher, cv::COLOR_BGR2GRAY);
+            if(algo=="bm")
+            {
+                Ptr<cv::StereoBM> left_matcher = cv::StereoBM::create(max_disp,wsize);
+                left_matcher->setPreFilterSize(ui->horizontalSlider_pre_filter_size->value());  // must be an odd between 5 and 255
+                left_matcher->setPreFilterCap(ui->horizontalSlider_pre_filter_cap->value());  // must be within 1 and 63
+                left_matcher->setBlockSize(ui->horizontalSlider_SAD_window_size->value());  // must be odd, be within 5..255 and be not larger than image width or height
+                left_matcher->setMinDisparity(ui->horizontalSlider_min_disparity->value()); // normally at 0
+                left_matcher->setNumDisparities(ui->horizontalSlider_num_of_disparity->value());  // must be > 0 and divisible by 16
+                left_matcher->setTextureThreshold(ui->horizontalSlider_texture_threshold->value());  // must be non-negative
+                left_matcher->setUniquenessRatio(ui->horizontalSlider_uniqueness_ratio->value());  // must be non-negative
+                left_matcher->setSpeckleWindowSize(ui->horizontalSlider_speckle_window_size->value()); // 0 to disable, set to 50-200
+                left_matcher->setSpeckleRange(ui->horizontalSlider_speckle_range->value()); // 1 or 2 is good, 0 to disable
+                left_matcher->setDisp12MaxDiff(ui->horizontalSlider_disp_12_max_diff->value()); // negative = disabled
 
-            ROI = computeROI(left_for_matcher.size(),matcher);
+                wls_filter = cv::ximgproc::createDisparityWLSFilter(left_matcher);
+                Ptr<cv::StereoMatcher> right_matcher = cv::ximgproc::createRightMatcher(left_matcher);
 
-            wls_filter = cv::ximgproc::createDisparityWLSFilterGeneric(false);
-            wls_filter->setDepthDiscontinuityRadius((int)ceil(0.33*wsize));
+                cv::cvtColor(left_for_matcher,  left_for_matcher,  cv::COLOR_BGR2GRAY); // Convert to gray, needed by bm function
+                cv::cvtColor(right_for_matcher, right_for_matcher, cv::COLOR_BGR2GRAY);
 
-            matcher->compute(left_for_matcher,right_for_matcher,left_disp);
+                left_matcher-> compute(left_for_matcher, right_for_matcher,left_disp);
+                right_matcher->compute(right_for_matcher,left_for_matcher, right_disp);
+            }
+            else if(algo=="sgbm")
+            {
+                Ptr<cv::StereoSGBM> left_matcher  = cv::StereoSGBM::create(0,max_disp,wsize);
+                left_matcher->setPreFilterCap(ui->horizontalSlider_pre_filter_size->value());  // must be within 1 and 63
+                left_matcher->setBlockSize(ui->horizontalSlider_SAD_window_size->value());  // must be odd, be within 5..255 and be not larger than image width or height
+                left_matcher->setMinDisparity(ui->horizontalSlider_min_disparity->value()); // normally at 0
+                left_matcher->setNumDisparities(ui->horizontalSlider_num_of_disparity->value());  // must be > 0 and divisible by 16
+                left_matcher->setUniquenessRatio(ui->horizontalSlider_uniqueness_ratio->value());  // must be non-negative
+                left_matcher->setSpeckleWindowSize(ui->horizontalSlider_speckle_window_size->value()); // 0 to disable, set to 50-200
+                left_matcher->setSpeckleRange(ui->horizontalSlider_speckle_range->value()); // 1 or 2 is good, 0 to disable
+                left_matcher->setDisp12MaxDiff(ui->horizontalSlider_disp_12_max_diff->value()); // negative = disabled
+                left_matcher->setP1(ui->horizontalSlider_P1->value());
+                left_matcher->setP2(ui->horizontalSlider_P2->value());
+                left_matcher->setMode(mode);
+
+                wls_filter =  cv::ximgproc::createDisparityWLSFilter(left_matcher);
+                Ptr<cv::StereoMatcher> right_matcher = cv::ximgproc::createRightMatcher(left_matcher);
+
+                left_matcher-> compute(left_for_matcher, right_for_matcher,left_disp);
+                right_matcher->compute(right_for_matcher,left_for_matcher, right_disp);
+            }
+
+            // filtering
+            wls_filter->setLambda(lambda);
+            wls_filter->setSigmaColor(sigma);
+            wls_filter->filter(left_disp,left,filtered_disp,right_disp);
+
+            conf_map = wls_filter->getConfidenceMap();
+
+            ROI = wls_filter->getROI(); // Get the ROI that was used in the last filter call
         }
-        else if(algo=="sgbm")
+        else if(filter=="wls_no_conf")
         {
-            Ptr<cv::StereoSGBM> matcher  = cv::StereoSGBM::create(0,max_disp,wsize);
-            matcher->setPreFilterCap(ui->horizontalSlider_pre_filter_size->value());  // must be within 1 and 63
-            matcher->setBlockSize(ui->horizontalSlider_SAD_window_size->value());  // must be odd, be within 5..255 and be not larger than image width or height
-            matcher->setMinDisparity(ui->horizontalSlider_min_disparity->value()); // normally at 0
-            matcher->setNumDisparities(ui->horizontalSlider_num_of_disparity->value());  // must be > 0 and divisible by 16
-            matcher->setUniquenessRatio(ui->horizontalSlider_uniqueness_ratio->value());  // must be non-negative
-            matcher->setSpeckleWindowSize(ui->horizontalSlider_speckle_window_size->value()); // 0 to disable, set to 50-200
-            matcher->setSpeckleRange(ui->horizontalSlider_speckle_range->value()); // 1 or 2 is good, 0 to disable
-            matcher->setDisp12MaxDiff(ui->horizontalSlider_disp_12_max_diff->value()); // negative = disabled
-            matcher->setP1(ui->horizontalSlider_P1->value());
-            matcher->setP2(ui->horizontalSlider_P2->value());
-            matcher->setMode(mode);
+            /* There is no convenience function for the case of filtering with no confidence, so we
+            will need to set the ROI and matcher parameters manually */
 
-            ROI = computeROI(left_for_matcher.size(),matcher);
+            left_for_matcher  = left.clone();
+            right_for_matcher = right.clone();
 
-            wls_filter = cv::ximgproc::createDisparityWLSFilterGeneric(false);
-            wls_filter->setDepthDiscontinuityRadius((int)ceil(0.5*wsize));
+            if(algo=="bm")
+            {
+                Ptr<cv::StereoBM> matcher  = cv::StereoBM::create(max_disp,wsize);
+                matcher->setPreFilterSize(ui->horizontalSlider_pre_filter_size->value());  // must be an odd between 5 and 255
+                matcher->setPreFilterCap(ui->horizontalSlider_pre_filter_cap->value());  // must be within 1 and 63
+                matcher->setBlockSize(ui->horizontalSlider_SAD_window_size->value());  // must be odd, be within 5..255 and be not larger than image width or height
+                matcher->setMinDisparity(ui->horizontalSlider_min_disparity->value()); // normally at 0
+                matcher->setNumDisparities(ui->horizontalSlider_num_of_disparity->value());  // must be > 0 and divisible by 16
+                matcher->setTextureThreshold(ui->horizontalSlider_texture_threshold->value());  // must be non-negative
+                matcher->setUniquenessRatio(ui->horizontalSlider_uniqueness_ratio->value());  // must be non-negative
+                matcher->setSpeckleWindowSize(ui->horizontalSlider_speckle_window_size->value()); // 0 to disable, set to 50-200
+                matcher->setSpeckleRange(ui->horizontalSlider_speckle_range->value()); // 1 or 2 is good, 0 to disable
+                matcher->setDisp12MaxDiff(ui->horizontalSlider_disp_12_max_diff->value()); // negative = disabled
 
-            matcher->compute(left_for_matcher,right_for_matcher,left_disp);
+                cv::cvtColor(left_for_matcher,  left_for_matcher, cv::COLOR_BGR2GRAY); // Convert to gray, needed by bm function
+                cv::cvtColor(right_for_matcher, right_for_matcher, cv::COLOR_BGR2GRAY);
+
+                ROI = computeROI(left_for_matcher.size(),matcher);
+
+                wls_filter = cv::ximgproc::createDisparityWLSFilterGeneric(false);
+                wls_filter->setDepthDiscontinuityRadius((int)ceil(0.33*wsize));
+
+                matcher->compute(left_for_matcher,right_for_matcher,left_disp);
+            }
+            else if(algo=="sgbm")
+            {
+                Ptr<cv::StereoSGBM> matcher  = cv::StereoSGBM::create(0,max_disp,wsize);
+                matcher->setPreFilterCap(ui->horizontalSlider_pre_filter_size->value());  // must be within 1 and 63
+                matcher->setBlockSize(ui->horizontalSlider_SAD_window_size->value());  // must be odd, be within 5..255 and be not larger than image width or height
+                matcher->setMinDisparity(ui->horizontalSlider_min_disparity->value()); // normally at 0
+                matcher->setNumDisparities(ui->horizontalSlider_num_of_disparity->value());  // must be > 0 and divisible by 16
+                matcher->setUniquenessRatio(ui->horizontalSlider_uniqueness_ratio->value());  // must be non-negative
+                matcher->setSpeckleWindowSize(ui->horizontalSlider_speckle_window_size->value()); // 0 to disable, set to 50-200
+                matcher->setSpeckleRange(ui->horizontalSlider_speckle_range->value()); // 1 or 2 is good, 0 to disable
+                matcher->setDisp12MaxDiff(ui->horizontalSlider_disp_12_max_diff->value()); // negative = disabled
+                matcher->setP1(ui->horizontalSlider_P1->value());
+                matcher->setP2(ui->horizontalSlider_P2->value());
+                matcher->setMode(mode);
+
+                ROI = computeROI(left_for_matcher.size(),matcher);
+
+                wls_filter = cv::ximgproc::createDisparityWLSFilterGeneric(false);
+                wls_filter->setDepthDiscontinuityRadius((int)ceil(0.5*wsize));
+
+                matcher->compute(left_for_matcher,right_for_matcher,left_disp);
+            }
+
+            // filtering
+            wls_filter->setLambda(lambda);
+            wls_filter->setSigmaColor(sigma);
+            wls_filter->filter(left_disp,left,filtered_disp,Mat(),ROI);
         }
 
-        // filtering
-        wls_filter->setLambda(lambda);
-        wls_filter->setSigmaColor(sigma);
-        wls_filter->filter(left_disp,left,filtered_disp,Mat(),ROI);
+        // Visualization
+        cv::Mat raw_disp_vis;
+        getDisparityVis(left_disp,raw_disp_vis,1);
+        Mat filtered_disp_vis;
+        getDisparityVis(filtered_disp,filtered_disp_vis,1);
+
+        computed = true; // Indicate that a depthmap exists
+
+        // convert the image to a QPixmap and display it
+        cv::cvtColor(filtered_disp_vis, disp_color, COLOR_GRAY2RGB); // convert to color, better for saving the file
+        ShowDepthmap();
     }
-
-    // Visualization
-    cv::Mat raw_disp_vis;
-    getDisparityVis(left_disp,raw_disp_vis,1);
-    Mat filtered_disp_vis;
-    getDisparityVis(filtered_disp,filtered_disp_vis,1);
-
-    computed = true; // Indicate that a depthmap exists
-
-    // convert the image to a QPixmap and display it
-    cv::cvtColor(filtered_disp_vis, disp_color, CV_GRAY2RGB); // convert to color, better for saving the file
-    ShowDepthmap();
 
     // Reprojection 3D
     //Mat project3D;
@@ -373,6 +398,9 @@ void MainWindow::on_radioButton_BM_clicked ()
 {
     if (ui->radioButton_BM->isChecked())
     {
+        ui->frame_BM_SGBM->setVisible(true);
+        ui->frame_quasi->setVisible(false);
+        ui->checkBox_confidence->setVisible(true);
         ui->horizontalSlider_P1->setVisible(false);
         ui->label_P1->setVisible(false);
         ui->label_11->setVisible(false);
@@ -381,6 +409,7 @@ void MainWindow::on_radioButton_BM_clicked ()
         ui->label_12->setVisible(false);
         ui->mode->setVisible(false);
         ui->label_mode->setVisible(false);
+        ui->Disparity->setVisible(true);
     }
 }
 
@@ -389,6 +418,9 @@ void MainWindow::on_radioButton_SGBM_clicked ()
 {
     if (ui->radioButton_SGBM->isChecked())
     {
+        ui->frame_BM_SGBM->setVisible(true);
+        ui->frame_quasi->setVisible(false);
+        ui->checkBox_confidence->setVisible(true);
         ui->horizontalSlider_P1->setVisible(true);
         ui->label_P1->setVisible(true);
         ui->label_11->setVisible(true);
@@ -397,6 +429,19 @@ void MainWindow::on_radioButton_SGBM_clicked ()
         ui->label_12->setVisible(true);
         ui->mode->setVisible(true);
         ui->label_mode->setVisible(true);
+        ui->Disparity->setVisible(true);
+    }
+}
+
+///// QUASI
+void MainWindow::on_radioButton_quasi_clicked ()
+{
+    if (ui->radioButton_quasi->isChecked())
+    {
+        ui->frame_BM_SGBM->setVisible(false);
+        ui->frame_quasi->setVisible(true);
+        ui->checkBox_confidence->setVisible(false);
+        ui->Disparity->setVisible(false);
     }
 }
 
@@ -416,7 +461,7 @@ void MainWindow::on_Camera_clicked () { // load stereo camera matrix
     int ref_width, ref_height, ref_size;
     double error;
     // Read calibration results from XML file
-    QString filename = QFileDialog::getOpenFileName(this, "Select XML calibration file", ".", "XML parameters (*.xml *.XML)");
+    QString filename = QFileDialog::getOpenFileName(this, "Select XML calibration file", QString::fromStdString(basedir), "XML parameters (*.xml *.XML)");
     if (filename.isNull())
         return;
 
@@ -479,10 +524,12 @@ void MainWindow::on_Rectify_clicked () {
 
 void MainWindow::on_MPO_clicked () {
 
-    QString filename = QFileDialog::getOpenFileName(this, "Select MPO image file", ".", "MPO image (*.mpo *.MPO)");
+    QString filename = QFileDialog::getOpenFileName(this, "Select MPO image file", QString::fromStdString(basedir), "MPO image (*.mpo *.MPO)");
     if (filename.isNull())
         return;
     basename = filename.toUtf8().constData(); // basename is used after to save other files
+    size_t found = basename.find_last_of("/"); // find last directory
+    basedir = basename.substr(0,found) + "/"; // extract file location
     basename = basename.substr(0, basename.size()-4);
 
     bool success;
@@ -523,7 +570,7 @@ void MainWindow::on_Save_depthmap_clicked() { // save depthmap in PNG format
     if (this->disp_color.empty()) // check that depthmap exists
             return;
 
-    QString filename = QFileDialog::getSaveFileName(this, "Save depthmap to image...", "./" + QString::fromStdString(basename + "-depthmap") + ".png", NULL);
+    QString filename = QFileDialog::getSaveFileName(this, "Save depthmap to image...", "./" + QString::fromStdString(basename +"-depthmap") + ".png", NULL);
     std::string filename_s = filename.toUtf8().constData();
 
     if (filename.isNull() || filename.isEmpty())
@@ -599,14 +646,16 @@ void MainWindow::on_checkBox_fit_clicked() // Loads left image
 
 void MainWindow::on_Left_clicked() // Loads left image
 {
-    QString filename = QFileDialog::getOpenFileName(this, "Select left picture file", ".", "Images (*.jpg *.JPG *.jpeg *.JPEG *.jp2 *.JP2 *.png *.PNG *.tif *.TIF *.tiff *.TIFF *.bmp *.BMP)");
+    QString filename = QFileDialog::getOpenFileName(this, "Select left picture file", QString::fromStdString(basedir), "Images (*.jpg *.JPG *.jpeg *.JPEG *.jp2 *.JP2 *.png *.PNG *.tif *.TIF *.tiff *.TIFF *.bmp *.BMP)");
     if (filename.isNull() || filename.isEmpty())
         return;
     basename = filename.toUtf8().constData(); // basename is used after to save other files
+    size_t found = basename.find_last_of("/"); // find last directory
+    basedir = basename.substr(0,found) + "/"; // extract file location
     basename = basename.substr(0, basename.size()-6);
     std::string filename_s = filename.toUtf8().constData();
 
-    cv::Mat mat = cv::imread(filename_s, CV_LOAD_IMAGE_COLOR); // Load image
+    cv::Mat mat = cv::imread(filename_s, IMREAD_COLOR); // Load image
     ui->label_image_left->setPixmap(Mat2QPixmapResized(mat, ui->label_image_left->width(), ui->label_image_left->height())); // Display left image
 
     left_image = mat; // stores the image for further use
@@ -624,15 +673,17 @@ void MainWindow::on_Left_clicked() // Loads left image
 
 void MainWindow::on_Right_clicked() // Loads right image
 {
-    QString filename = QFileDialog::getOpenFileName(this, "Select right picture file", ".", "Images (*.jpg *.JPG *.jpeg *.JPEG *.jp2 *.JP2 *.png *.PNG *.tif *.TIF *.tiff *.TIFF *.bmp *.BMP)");
+    QString filename = QFileDialog::getOpenFileName(this, "Select right picture file", QString::fromStdString(basedir), "Images (*.jpg *.JPG *.jpeg *.JPEG *.jp2 *.JP2 *.png *.PNG *.tif *.TIF *.tiff *.TIFF *.bmp *.BMP)");
 
     if (filename.isNull() || filename.isEmpty())
         return;
     basename = filename.toUtf8().constData();
+    size_t found = basename.find_last_of("/"); // find last directory
+    basedir = basename.substr(0,found) + "/"; // extract file location
     basename = basename.substr(0, basename.size()-6);
     std::string filename_s = filename.toUtf8().constData();
 
-    cv::Mat mat = cv::imread(filename_s, CV_LOAD_IMAGE_COLOR); // Load image
+    cv::Mat mat = cv::imread(filename_s, IMREAD_COLOR); // Load image
     ui->label_image_right->setPixmap(Mat2QPixmapResized(mat, ui->label_image_right->width(), ui->label_image_right->height())); // Display right image
 
     right_image = mat; // stores the image for further use

@@ -167,6 +167,12 @@
    <property name="toolTip">
     <string>Use the slider until the BACKGROUND is sharp</string>
    </property>
+   <property name="frameShape">
+    <enum>QFrame::Panel</enum>
+   </property>
+   <property name="lineWidth">
+    <number>2</number>
+   </property>
    <property name="widgetResizable">
     <bool>true</bool>
    </property>
@@ -178,8 +184,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>669</width>
-      <height>499</height>
+      <width>667</width>
+      <height>497</height>
      </rect>
     </property>
     <widget class="QLabel" name="label_background_disparity">

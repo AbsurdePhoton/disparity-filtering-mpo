@@ -21,7 +21,7 @@ enum Direction{ShiftUp=1, ShiftRight, ShiftDown, ShiftLeft};
 QImage Mat2QImage(cv::Mat const& src)
 {
      cv::Mat temp;
-     cv::cvtColor(src, temp,CV_BGR2RGB);
+     cv::cvtColor(src, temp,COLOR_BGR2RGB);
      QImage dest((const uchar *) temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
      dest.bits(); // enforce deep copy of QImage::QImage ( const uchar * data, int width, int height, Format format )
      return dest;

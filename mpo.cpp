@@ -102,8 +102,8 @@ bool MPO2Mat(QString source, vector<cv::Mat>& vector)
         QVector<uchar> leftImageData = imageData.mid(0,secondImageStart - 1);
         QVector<uchar> rightImageData = imageData.mid(secondImageStart,fileLength - secondImageStart);
         // decode jpegs in Mat containers
-        ret[0] = imdecode(leftImageData.toStdVector(), CV_LOAD_IMAGE_COLOR);
-        ret[1] = imdecode(rightImageData.toStdVector(), CV_LOAD_IMAGE_COLOR);
+        ret[0] = imdecode(leftImageData.toStdVector(), IMREAD_COLOR);
+        ret[1] = imdecode(rightImageData.toStdVector(), IMREAD_COLOR);
         // return pointer array
         vector = ret;
         // success

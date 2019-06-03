@@ -4,7 +4,7 @@
 #
 #    by AbsurdePhoton - www.absurdephoton.fr
 #
-#                v1.2 - 2018/07/16
+#                v1.3 - 2019/06/03
 #
 #-------------------------------------------------*/
 
@@ -103,6 +103,8 @@ private slots:
 
     void on_radioButton_SGBM_clicked ();
 
+    void on_radioButton_quasi_clicked ();
+
     void on_Compute_clicked();  // compute depth map with OpenCV
 
 private:
@@ -113,7 +115,7 @@ private:
     cv::Mat disp_color; // Processed stereo map
     Mat KR, KL, DL, DR, R, F, E;
     Vec3d T;
-    std::string basename;
+    std::string basename, basedir;
 
     // the object that holds the parameters for the block-matching algorithm
     Ptr<cv::StereoBM> bmState = cv::StereoBM::create(16, 2);
