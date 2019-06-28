@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Adjust the alignment of the right image against the left image</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="resources.qrc">
+    <normaloff>:/icons/adjust.png</normaloff>:/icons/adjust.png</iconset>
+  </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>

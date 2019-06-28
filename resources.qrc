@@ -1,5 +1,6 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
+  <file>./icons/3d-quality.png</file>
   <file>./icons/rotate.png</file>
   <file>./icons/swap.png</file>
   <file>./icons/load.png</file>

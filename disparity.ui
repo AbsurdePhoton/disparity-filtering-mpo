@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Visually measure the minimum and maximum disparity</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="resources.qrc">
+    <normaloff>:/icons/disparity.png</normaloff>:/icons/disparity.png</iconset>
+  </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>

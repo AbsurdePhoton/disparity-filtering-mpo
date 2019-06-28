@@ -19,6 +19,10 @@
   <property name="windowTitle">
    <string>Disparity or depth map from 3D stereo pairs with openCV and QT</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="resources.qrc">
+    <normaloff>:/icons/3d-quality.png</normaloff>:/icons/3d-quality.png</iconset>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QPushButton" name="Left">
     <property name="geometry">
