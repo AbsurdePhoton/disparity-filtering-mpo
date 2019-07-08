@@ -17,6 +17,10 @@
 #include "mat-image-tools.h"
 #include <opencv2/stereo.hpp>
 
+using namespace cv;
+using namespace cv::ximgproc;
+using namespace std;
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -78,11 +82,11 @@ void MainWindow::ShowDepthmap() {
 
     QPixmap D;
     if (ui->checkBox_fit->isChecked()) { // Fit to the display area
-        D = Mat2QPixmapResized(disp_color, ui->scrollArea->width(), ui->scrollArea->height()); // Display depthmap
+        D = Mat2QPixmapResized(disp_color, ui->scrollArea->width(), ui->scrollArea->height(), true); // Display depthmap
         ui->scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // Make scrollbars disappear
         ui->scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     } else { // Zoom = 100%
-        D = Mat2QPixmapResized(disp_color, disp_color.cols-18, disp_color.rows-18);
+        D = Mat2QPixmapResized(disp_color, disp_color.cols-18, disp_color.rows-18, true);
         ui->scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn); // Make scrollbars appear
         ui->scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     }
@@ -514,8 +518,8 @@ void MainWindow::on_Rectify_clicked () {
 
     // Display rectified images
     QPixmap L, R;
-    L = Mat2QPixmapResized(left_image, ui->label_image_left->width(), ui->label_image_left->height());
-    R = Mat2QPixmapResized(right_image, ui->label_image_right->width(), ui->label_image_right->height());
+    L = Mat2QPixmapResized(left_image, ui->label_image_left->width(), ui->label_image_left->height(), true);
+    R = Mat2QPixmapResized(right_image, ui->label_image_right->width(), ui->label_image_right->height(), true);
     ui->label_image_left->setPixmap(L);
     ui->label_image_right->setPixmap(R);
 
@@ -543,8 +547,8 @@ void MainWindow::on_MPO_clicked () {
     left_image = matImages[0];
     right_image = matImages[1];
     QPixmap L, R;
-    L = Mat2QPixmapResized(left_image, ui->label_image_left->width(), ui->label_image_left->height());
-    R = Mat2QPixmapResized(right_image, ui->label_image_right->width(), ui->label_image_right->height());
+    L = Mat2QPixmapResized(left_image, ui->label_image_left->width(), ui->label_image_left->height(), true);
+    R = Mat2QPixmapResized(right_image, ui->label_image_right->width(), ui->label_image_right->height(), true);
     ui->label_image_left->setPixmap(L);
     ui->label_image_right->setPixmap(R);
     ui->horizontalSlider_min_disparity->setMaximum(left_image.cols / 4);
@@ -605,8 +609,8 @@ void MainWindow::on_Rotate_clicked() { // rotates the left and right images by 9
     rotate(right_image, right_image, ROTATE_90_CLOCKWISE);
 
     QPixmap L, R;
-    L = Mat2QPixmapResized(left_image, ui->label_image_left->width(), ui->label_image_left->height());
-    R = Mat2QPixmapResized(right_image, ui->label_image_right->width(), ui->label_image_right->height());
+    L = Mat2QPixmapResized(left_image, ui->label_image_left->width(), ui->label_image_left->height(), true);
+    R = Mat2QPixmapResized(right_image, ui->label_image_right->width(), ui->label_image_right->height(), true);
     ui->label_image_left->setPixmap(L);
     ui->label_image_right->setPixmap(R);
 }
@@ -622,8 +626,8 @@ void MainWindow::on_Swap_clicked() { // Swap left and right image
     right_image = temp;
 
     QPixmap L, R;
-    L = Mat2QPixmapResized(left_image, ui->label_image_left->width(), ui->label_image_left->height());
-    R = Mat2QPixmapResized(right_image, ui->label_image_right->width(), ui->label_image_right->height());
+    L = Mat2QPixmapResized(left_image, ui->label_image_left->width(), ui->label_image_left->height(), true);
+    R = Mat2QPixmapResized(right_image, ui->label_image_right->width(), ui->label_image_right->height(), true);
     ui->label_image_left->setPixmap(L);
     ui->label_image_right->setPixmap(R);
 }
@@ -656,7 +660,7 @@ void MainWindow::on_Left_clicked() // Loads left image
     std::string filename_s = filename.toUtf8().constData();
 
     cv::Mat mat = cv::imread(filename_s, IMREAD_COLOR); // Load image
-    ui->label_image_left->setPixmap(Mat2QPixmapResized(mat, ui->label_image_left->width(), ui->label_image_left->height())); // Display left image
+    ui->label_image_left->setPixmap(Mat2QPixmapResized(mat, ui->label_image_left->width(), ui->label_image_left->height(), true)); // Display left image
 
     left_image = mat; // stores the image for further use
 
@@ -684,7 +688,7 @@ void MainWindow::on_Right_clicked() // Loads right image
     std::string filename_s = filename.toUtf8().constData();
 
     cv::Mat mat = cv::imread(filename_s, IMREAD_COLOR); // Load image
-    ui->label_image_right->setPixmap(Mat2QPixmapResized(mat, ui->label_image_right->width(), ui->label_image_right->height())); // Display right image
+    ui->label_image_right->setPixmap(Mat2QPixmapResized(mat, ui->label_image_right->width(), ui->label_image_right->height(), true)); // Display right image
 
     right_image = mat; // stores the image for further use
 
@@ -748,5 +752,5 @@ void MainWindow::on_Adjust_clicked() // Open adjust window
         return;
 
     right_image = adj_form->getResult();
-    ui->label_image_right->setPixmap(Mat2QPixmapResized(right_image, ui->label_image_right->width(), ui->label_image_right->height())); // Display right image
+    ui->label_image_right->setPixmap(Mat2QPixmapResized(right_image, ui->label_image_right->width(), ui->label_image_right->height(), true)); // Display right image
 }

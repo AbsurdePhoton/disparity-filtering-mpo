@@ -15,6 +15,8 @@
 
 #include "opencv2/opencv.hpp"
 
+using namespace cv;
+
 Disparity::Disparity(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Disparity)
@@ -53,14 +55,14 @@ void Disparity::DisplayShiftedBackground() {
     Mat shift, result;
 
     if (background_disparity >= 0)
-        shift = shiftFrame(right_image, background_disparity, ShiftRight);
-    else shift = shiftFrame(right_image, -background_disparity, ShiftLeft);
+        shift = ShiftFrame(right_image, background_disparity, shift_right);
+    else shift = ShiftFrame(right_image, -background_disparity, shift_left);
 
     cv::addWeighted(left_image, 0.5, shift, 0.5, 0, result, -1);
 
     QPixmap D;
     if (ui->checkBox_fit->isChecked()) { // Fit to the display area
-        D = Mat2QPixmapResized(result, ui->scrollArea_background->width(), ui->scrollArea_background->height());
+        D = Mat2QPixmapResized(result, ui->scrollArea_background->width(), ui->scrollArea_background->height(), true);
         ui->scrollArea_background->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // Make scrollbars appear
         ui->scrollArea_background->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     } else { // Zoom = 100%
@@ -83,14 +85,14 @@ void Disparity::DisplayShiftedForeground() {
 
     Mat shift, result;
 
-    if (foreground_disparity >= 0) shift = shiftFrame(right_image, foreground_disparity, ShiftRight);
-        else shift = shiftFrame(right_image, -foreground_disparity, ShiftLeft);
+    if (foreground_disparity >= 0) shift = ShiftFrame(right_image, foreground_disparity, shift_right);
+        else shift = ShiftFrame(right_image, -foreground_disparity, shift_left);
 
     cv::addWeighted(left_image, 0.5, shift, 0.5, 0, result, -1);
 
     QPixmap D;
     if (ui->checkBox_fit->isChecked()) { // Fit to the display area
-        D = Mat2QPixmapResized(result, ui->scrollArea_foreground->width(), ui->scrollArea_foreground->height());
+        D = Mat2QPixmapResized(result, ui->scrollArea_foreground->width(), ui->scrollArea_foreground->height(), true);
         ui->scrollArea_foreground->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // Make scrollbars appear
         ui->scrollArea_foreground->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     } else // Zoom = 100%

@@ -26,10 +26,6 @@
 #include <QMainWindow>
 #include <QFileDialog>
 
-using namespace cv;
-using namespace cv::ximgproc;
-using namespace std;
-
 namespace Ui {
 class MainWindow;
 }
@@ -113,13 +109,13 @@ private:
 
     cv::Mat left_image, right_image; // left and right images
     cv::Mat disp_color; // Processed stereo map
-    Mat KR, KL, DL, DR, R, F, E;
-    Vec3d T;
+    cv::Mat KR, KL, DL, DR, R, F, E;
+    cv::Vec3d T;
     std::string basename, basedir;
 
     // the object that holds the parameters for the block-matching algorithm
-    Ptr<cv::StereoBM> bmState = cv::StereoBM::create(16, 2);
-    Ptr<cv::StereoSGBM> sgbmState = cv::StereoSGBM::create(-32, 144, 5);
+    cv::Ptr<cv::StereoBM> bmState = cv::StereoBM::create(16, 2);
+    cv::Ptr<cv::StereoSGBM> sgbmState = cv::StereoSGBM::create(-32, 144, 5);
 
     // To know if a depthmap has been computed
     bool computed;
@@ -130,7 +126,7 @@ private:
     void set_SADWindowSize();  // manage max value of SADWindowSize slider
     void set_num_of_disparity_slider_to_multiple_16(int position);
 
-    Rect computeROI(Size2i src_sz, Ptr<StereoMatcher> matcher_instance);
+    cv::Rect computeROI(cv::Size2i src_sz, cv::Ptr<cv::StereoMatcher> matcher_instance);
 };
 
 #endif // MAINWINDOW_H

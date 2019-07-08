@@ -13,10 +13,7 @@
 
 #include "opencv2/opencv.hpp"
 
-using namespace std;
-using namespace cv;
-
-bool MPO2Pixmap(QString source, vector<QPixmap>& vector);
-bool MPO2Mat(QString source, vector<cv::Mat>& vector);
+bool MPO2Pixmap(QString source, std::vector<QPixmap>& vector);
+bool MPO2Mat(QString source, std::vector<cv::Mat>& vector);
 
 #endif // MPO_H

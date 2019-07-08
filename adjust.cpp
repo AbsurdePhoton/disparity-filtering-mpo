@@ -15,6 +15,8 @@
 
 #include "opencv2/opencv.hpp"
 
+using namespace cv;
+
 Adjust::Adjust(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Adjust)
@@ -44,12 +46,12 @@ void Adjust::DisplayShifted() {
 
     Mat shiftX, shiftY, result;
 
-    if (decX < 0) shiftX = shiftFrame(right_image, std::abs(decX), ShiftLeft);
-    else if (decX > 0) shiftX = shiftFrame(right_image, std::abs(decX), ShiftRight);
+    if (decX < 0) shiftX = ShiftFrame(right_image, std::abs(decX), shift_left);
+    else if (decX > 0) shiftX = ShiftFrame(right_image, std::abs(decX), shift_right);
         else shiftX = right_image;
 
-    if (decY < 0) shiftY = shiftFrame(shiftX, std::abs(decY), ShiftUp);
-    else if (decY > 0) shiftY = shiftFrame(shiftX, std::abs(decY), ShiftDown);
+    if (decY < 0) shiftY = ShiftFrame(shiftX, std::abs(decY), shift_up);
+    else if (decY > 0) shiftY = ShiftFrame(shiftX, std::abs(decY), shift_down);
         else shiftY = shiftX;
 
     shifted = shiftY;
@@ -58,7 +60,7 @@ void Adjust::DisplayShifted() {
 
     QPixmap D;
     if (ui->checkBox_fit->isChecked()) { // Fit to the display area
-        D = Mat2QPixmapResized(result, ui->scrollArea->width(), ui->scrollArea->height());
+        D = Mat2QPixmapResized(result, ui->scrollArea->width(), ui->scrollArea->height(), true);
         ui->scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // Make scrollbars appear
         ui->scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     } else // Zoom = 100%
