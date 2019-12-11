@@ -632,7 +632,7 @@ QToolTip {
      </size>
     </property>
    </widget>
-   <widget class="QLabel" name="label_15">
+   <widget class="QLabel" name="label_about">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -651,7 +651,7 @@ QToolTip {
      <number>3</number>
     </property>
     <property name="text">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Disparity or depth map from 3D stereo pairs&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;by &lt;span style=&quot; color:#d89d1a;&quot;&gt;AbsurdePhoton - &lt;/span&gt;&lt;a href=&quot;https::/www.absurdephoton.fr&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;www.absurdephoton.fr&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Disparity or depth map from 3D stereo pairs&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;by &lt;span style=&quot; color:#d89d1a;&quot;&gt;AbsurdePhoton - &lt;/span&gt;&lt;a href=&quot;https://www.absurdephoton.fr&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;www.absurdephoton.fr&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -881,7 +881,7 @@ QToolTip {
      </property>
     </widget>
    </widget>
-   <widget class="QLabel" name="label_16">
+   <widget class="QLabel" name="label_logo">
     <property name="geometry">
      <rect>
       <x>384</x>
@@ -891,7 +891,7 @@ QToolTip {
      </rect>
     </property>
     <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;( --- in my best Mario voice --- )&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Yes, it's meee... AbsurdePhoton!&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;AbsurdePhoton - www.absurdephoton.fr&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>AbsurdePhoton - www.absurdephoton.fr</string>
     </property>
     <property name="text">
      <string/>
@@ -948,7 +948,7 @@ QToolTip {
      </size>
     </property>
    </widget>
-   <widget class="QLabel" name="label_18">
+   <widget class="QLabel" name="label_version">
     <property name="geometry">
      <rect>
       <x>28</x>
@@ -1771,10 +1771,10 @@ QToolTip {
    <zorder>Rotate</zorder>
    <zorder>Swap</zorder>
    <zorder>Save_depthmap</zorder>
-   <zorder>label_15</zorder>
+   <zorder>label_about</zorder>
    <zorder>checkBox_fit</zorder>
-   <zorder>label_16</zorder>
-   <zorder>label_18</zorder>
+   <zorder>label_logo</zorder>
+   <zorder>label_version</zorder>
    <zorder>Adjust</zorder>
    <zorder>radioButton_quasi</zorder>
    <zorder>frame_quasi</zorder>
